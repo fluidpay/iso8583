@@ -2,7 +2,6 @@ package iso8583
 
 import (
 	"bytes"
-	"fmt"
 	"testing"
 )
 
@@ -38,12 +37,6 @@ func TestAddField(t *testing.T) {
 			t.Errorf("bitmap should be %s, instead of %s", scenario.result, result)
 		}
 	}
-}
-
-func TestLeftPad(t *testing.T) {
-	data := "923234"
-	res := leftPad(data, 12, "0")
-	fmt.Println(res)
 }
 
 func TestBitmapExUnpacked(t *testing.T) {

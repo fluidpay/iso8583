@@ -3,8 +3,6 @@ package iso8583
 import (
 	"encoding/hex"
 	"fmt"
-	"math"
-	"strings"
 )
 
 func addField(fields uint64, num uint8) uint64 {
@@ -13,20 +11,7 @@ func addField(fields uint64, num uint8) uint64 {
 }
 
 func bitmapHex(fields uint64) string {
-	return leftPad(fmt.Sprintf("%X", fields), 16, "0")
-}
-
-func leftPad(input string, padLength int, padString string) string {
-	var output string
-	inputLength := len(input)
-	padStringLength := len(padString)
-	if inputLength >= padLength {
-		return input
-	}
-	repeat := math.Ceil(float64(1) + (float64(padLength-padStringLength))/float64(padStringLength))
-	output = strings.Repeat(padString, int(repeat)) + input
-	output = output[len(output)-padLength:]
-	return output
+	return fmt.Sprintf("%016X", fields)
 }
 
 //TODO unpacked format
