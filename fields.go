@@ -16,6 +16,8 @@ type field interface {
 	Encode(encoder, length int) ([]byte, error)
 
 	Decode(raw []byte, encoder, length int)
+
+	isEmpty() bool
 }
 
 type N struct {
@@ -47,6 +49,10 @@ func (n *N) Decode(raw []byte, encoder, length int) {
 	panic("implement me")
 }
 
+func (n *N) isEmpty() bool {
+	return len(n.value) == 0
+}
+
 type AN struct {
 	value []byte
 }
@@ -68,4 +74,87 @@ func (an *AN) Encode(encoder, length int) ([]byte, error) {
 
 func (an *AN) Decode(raw []byte, encoder, length int) {
 	panic("implement me")
+}
+
+func (an *AN) isEmpty() bool {
+	return len(an.value) == 0
+}
+
+type B struct {
+	value []byte
+}
+
+func NewBinary() *B {
+	return &B{}
+}
+
+func (b *B) Encode(encoder, length int) ([]byte, error) {
+	panic("implement me")
+}
+
+func (b *B) Decode(raw []byte, encoder, length int) {
+	panic("implement me")
+}
+
+func (b *B) isEmpty() bool {
+	return len(b.value) == 0
+}
+
+type Z struct {
+	value []byte
+}
+
+func NewTrack2Code() *Z {
+	return &Z{}
+}
+
+func (z *Z) Encode(encoder, length int) ([]byte, error) {
+	panic("implement me")
+}
+
+func (z *Z) Decode(raw []byte, encoder, length int) {
+	panic("implement me")
+}
+func (z *Z) isEmpty() bool {
+	return len(z.value) == 0
+}
+
+type ANP struct {
+	value []byte
+}
+
+func NewANP() *ANP {
+	return &ANP{}
+}
+
+func (A *ANP) Encode(encoder, length int) ([]byte, error) {
+	panic("implement me")
+}
+
+func (A *ANP) Decode(raw []byte, encoder, length int) {
+	panic("implement me")
+}
+
+func (anp *ANP) isEmpty() bool {
+	return len(anp.value) == 0
+}
+
+type ANS struct {
+	value []byte
+}
+
+func NewANS() *ANS {
+	return &ANS{}
+}
+
+func (A *ANS) Encode(encoder, length int) ([]byte, error) {
+	panic("implement me")
+}
+
+func (A *ANS) Decode(raw []byte, encoder, length int) {
+	panic("implement me")
+}
+
+func (ans *ANS) isEmpty() bool {
+	return len(ans.value) == 0
 }
