@@ -11,7 +11,8 @@ type Message struct {
 
 	packedBitmap bool
 	packedMsg    bool
-	//Fields Fields
+	encoder      int
+
 	bitmapPrimary uint64
 
 	DE1   uint64 `format:"" length:"64"` //secondary bitmap
@@ -80,42 +81,73 @@ type Message struct {
 	DE128 *ANS   `format:"LLLLLVAR" length:"99999"`
 }
 
-type fieldInfo struct {
-	index  int
-	format string
-	length int
-	field  field
-}
+func (m *Message) Encode() ([]byte, error) {
+	res := make([]byte, 0)
+	// append mti
+	mti, err := encodeMti(m.Mti)
+	if err != nil {
+		return nil, err
+	}
+	res = append(res, mti...)
 
-func parseFields(m *Message) (map[int]*fieldInfo, error) {
-	fields := make(map[int]*fieldInfo)
+	// initialize bitmaps
+	var bitmapPrimary uint64
+	var bitmapSecondary uint64
+
+	data := make([]byte, 0, 512)
 
 	v := reflect.Indirect(reflect.ValueOf(m))
 	t := v.Type()
+	// iterate through iso fields, if field is not empty,
+	// encode and append it to data, and set the proper bit in bitmap
 	for i := 0; i < v.NumField(); i++ {
 		if v.Field(i).Kind() != reflect.Ptr || v.Field(i).IsNil() {
 			continue
 		}
-
 		sf := t.Field(i)
-		fName := sf.Name
-		ind, err := strconv.Atoi(strings.Trim(fName, "DE"))
+		// get field index, e.g. for DE2 index=2
+		index, err := strconv.Atoi(strings.Trim(sf.Name, "DE"))
 		if err != nil {
 			return nil, err
 		}
-		l, err := strconv.Atoi(sf.Tag.Get("length"))
+		// field length
+		length, err := strconv.Atoi(sf.Tag.Get("length"))
 		if err != nil {
 			return nil, err
 		}
+		// iso field format, "" means that field has fixed length, but
+		// e.g. LLVAR means that length indicator is encoded in the first 2 byte
+		// in this case length means "maximum length
 		format := sf.Tag.Get("format")
 
-		field := v.Field(i).Interface().(field)
-		fields[ind] = &fieldInfo{
-			index:  ind,
-			format: format,
-			length: l,
-			field:  field,
+		f := v.Field(i).Interface().(field)
+
+		if index <= 64 {
+			bitmapPrimary = addField(bitmapPrimary, uint8(index))
+		} else {
+			// if we need secondary bitmap, set first bit in primary bitmap
+			bitmapPrimary |= 1 << 63
+			bitmapSecondary = addField(bitmapSecondary, uint8(index-64))
 		}
+
+		// encode field, append it to data
+		d, err := f.Encode(m.encoder, length, format)
+		if err != nil {
+			return nil, err
+		}
+		data = append(data, d...)
 	}
-	return fields, nil
+
+	// append bitmaps to result
+	m.bitmapPrimary = bitmapPrimary
+	res = append(res, []byte(bitmapHex(bitmapPrimary))...)
+
+	if bitmapSecondary != 0 {
+		m.DE1 = bitmapSecondary
+		res = append(res, []byte(bitmapHex(bitmapSecondary))...)
+	}
+
+	// append iso data elements to result
+	res = append(res, data...)
+	return res, nil
 }

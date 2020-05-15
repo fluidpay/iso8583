@@ -13,7 +13,7 @@ const (
 )
 
 type field interface {
-	Encode(encoder, length int) ([]byte, error)
+	Encode(encoder, length int,format string) ([]byte, error)
 
 	Decode(raw []byte, encoder, length int)
 
@@ -28,7 +28,7 @@ func NewNumeric(value string) *N {
 	return &N{value: []byte(value)}
 }
 
-func (n *N) Encode(encoder, length int) ([]byte, error) {
+func (n *N) Encode(encoder, length int,format string) ([]byte, error) {
 	val := n.value
 	if len(val) < length {
 		val = append(bytes.Repeat([]byte("0"), length-len(val)), val...)
@@ -61,7 +61,7 @@ func NewAlphanumeric(value string) *AN {
 	return &AN{value: []byte(value)}
 }
 
-func (an *AN) Encode(encoder, length int) ([]byte, error) {
+func (an *AN) Encode(encoder, length int,format string) ([]byte, error) {
 	val := an.value
 	if len(val) < length {
 		val = append(val, bytes.Repeat([]byte(" "), length-len(val))...)
@@ -84,11 +84,11 @@ type B struct {
 	value []byte
 }
 
-func NewBinary() *B {
-	return &B{}
+func NewBinary(value string) *B {
+	return &B{[]byte(value)}
 }
 
-func (b *B) Encode(encoder, length int) ([]byte, error) {
+func (b *B) Encode(encoder, length int,format string) ([]byte, error) {
 	panic("implement me")
 }
 
@@ -104,11 +104,11 @@ type Z struct {
 	value []byte
 }
 
-func NewTrack2Code() *Z {
-	return &Z{}
+func NewTrack2Code(value string) *Z {
+	return &Z{[]byte(value)}
 }
 
-func (z *Z) Encode(encoder, length int) ([]byte, error) {
+func (z *Z) Encode(encoder, length int,format string) ([]byte, error) {
 	panic("implement me")
 }
 
@@ -123,11 +123,11 @@ type ANP struct {
 	value []byte
 }
 
-func NewANP() *ANP {
-	return &ANP{}
+func NewANP(value string) *ANP {
+	return &ANP{[]byte(value)}
 }
 
-func (A *ANP) Encode(encoder, length int) ([]byte, error) {
+func (A *ANP) Encode(encoder, length int,format string) ([]byte, error) {
 	panic("implement me")
 }
 
@@ -143,15 +143,15 @@ type ANS struct {
 	value []byte
 }
 
-func NewANS() *ANS {
-	return &ANS{}
+func NewANS(value string) *ANS {
+	return &ANS{[]byte(value)}
 }
 
-func (A *ANS) Encode(encoder, length int) ([]byte, error) {
+func (ans *ANS) Encode(encoder, length int,format string) ([]byte, error) {
 	panic("implement me")
 }
 
-func (A *ANS) Decode(raw []byte, encoder, length int) {
+func (ans *ANS) Decode(raw []byte, encoder, length int) {
 	panic("implement me")
 }
 
