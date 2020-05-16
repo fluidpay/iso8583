@@ -15,70 +15,70 @@ type Message struct {
 
 	bitmapPrimary uint64
 
-	DE1   uint64 `format:"" length:"64"` //secondary bitmap
-	DE2   *N     `format:"LLVAR" length:"19"`
-	DE3   *N     `format:"" length:"6"`
-	DE4   *N     `format:"" length:"12"`
-	DE5   *N     `format:"" length:"12"`
-	DE6   *N     `format:"" length:"12"`
-	DE7   *N     `format:"MMDDHHMMSS" length:"10"`
-	DE9   *N     `format:"" length:"8"`
-	DE10  *N     `format:"" length:"8"`
-	DE11  *N     `format:"" length:"6"`
-	DE12  *N     `format:"YYMMDDHHMMSS" length:"12"`
-	DE14  *N     `format:"YYMM" length:"4"`
-	DE16  *N     `format:"MMDD" length:"4"`
-	DE17  *N     `format:"MMDD" length:"4"`
-	DE18  *N     `format:"" length:"4"`
-	DE19  *N     `format:"" length:"3"`
-	DE22  *AN    `format:"" length:"12"`
-	DE23  *N     `format:"" length:"3"`
-	DE24  *N     `format:"" length:"3"`
-	DE25  *N     `format:"" length:"4"`
-	DE26  *N     `format:"" length:"4"`
-	DE28  *N     `format:"YYMMDD" length:"6"`
-	DE30  *N     `format:"" length:"24"`
-	DE32  *N     `format:"LLVAR" length:"11"`
-	DE33  *N     `format:"LLVAR" length:"11"`
-	DE34  *N     `format:"LLVAR" length:"28"`
-	DE35  *Z     `format:"LLVAR" length:"37"`
-	DE37  *ANP   `format:"" length:"12"`
-	DE38  *ANP   `format:"" length:"6"`
-	DE39  *N     `format:"" length:"3"`
-	DE41  *ANS   `format:"" length:"8"`
-	DE42  *ANS   `format:"" length:"15"`
-	DE43  *ANS   `format:"LLVAR" length:"99"`
-	DE46  *ANS   `format:"LLLVAR" length:"186"`
-	DE47  *ANS   `format:"LLLVAR" length:"999"`
-	DE48  *ANS   `format:"LLLVAR" length:"999"`
-	DE49  *N     `format:"" length:"3"`
-	DE50  *N     `format:"" length:"3"`
-	DE51  *N     `format:"" length:"3"`
-	DE52  *B     `format:"" length:"64"`
-	DE54  *ANS   `format:"LLLVAR" length:"120"`
-	DE56  *N     `format:"LLVAR" length:"35"`
-	DE57  *N     `format:"" length:"3"`
-	DE58  *N     `format:"LLVAR" length:"11"`
-	DE59  *ANS   `format:"LLLVAR" length:"999"`
-	DE62  *N     `format:"" length:"6"`
-	DE63  *N     `format:"MMDD" length:"4"`
-	DE66  *ANS   `format:"LLLVAR" length:"204"`
-	DE72  *ANS   `format:"LLLVAR" length:"999"`
-	DE93  *N     `format:"LLVAR" length:"11"`
-	DE94  *N     `format:"LLVAR" length:"11"`
-	DE95  *ANS   `format:"LLLLVAR" length:"9999"`
-	DE96  *ANS   `format:"LLLVAR" length:"100"`
-	DE100 *N     `format:"LLVAR" length:"11"`
-	DE101 *ANS   `format:"LLVAR" length:"17"`
-	DE102 *ANS   `format:"LLVAR" length:"28"`
-	DE103 *ANS   `format:"LLVAR" length:"28"`
-	DE111 *ANS   `format:"LLLLVAR" length:"9999"`
-	DE123 *ANS   `format:"LLLVAR" length:"999"`
-	DE124 *ANS   `format:"LLLVAR" length:"999"`
-	DE125 *ANS   `format:"LLLVAR" length:"999"`
-	DE126 *ANS   `format:"LLLVAR" length:"999"`
-	DE127 *ANS   `format:"LLLLVAR" length:"9999"`
-	DE128 *ANS   `format:"LLLLLVAR" length:"99999"`
+	DE1   uint64 `format:"FIXED" length:"64"` //secondary bitmap
+	DE2   *N     `format:"LLVAR" length:"19" validator:"N"`
+	DE3   *N     `format:"FIXED" length:"6" validator:"N"`
+	DE4   *N     `format:"FIXED" length:"12" validator:"N"`
+	DE5   *N     `format:"FIXED" length:"12" validator:"N"`
+	DE6   *N     `format:"FIXED" length:"12" validator:"N"`
+	DE7   *N     `format:"FIXED" length:"10" validator:"MMDDHHMMSS"`
+	DE9   *N     `format:"FIXED" length:"8" validator:"N"`
+	DE10  *N     `format:"FIXED" length:"8" validator:"N"`
+	DE11  *N     `format:"FIXED" length:"6" validator:"N"`
+	DE12  *N     `format:"FIXED" length:"12" validator:"YYMMDDHHMMSS"`
+	DE14  *N     `format:"FIXED" length:"4" validator:"YYMM"`
+	DE16  *N     `format:"FIXED" length:"4" validator:"MMDD"`
+	DE17  *N     `format:"FIXED" length:"4" validator:"MMDD"`
+	DE18  *N     `format:"FIXED" length:"4" validator:"N"`
+	DE19  *N     `format:"FIXED" length:"3" validator:"N"`
+	DE22  *AN    `format:"FIXED" length:"12" validator:"AN"`
+	DE23  *N     `format:"FIXED" length:"3" validator:"N"`
+	DE24  *N     `format:"FIXED" length:"3" validator:"N"`
+	DE25  *N     `format:"FIXED" length:"4" validator:"N"`
+	DE26  *N     `format:"FIXED" length:"4" validator:"N"`
+	DE28  *N     `format:"FIXED" length:"6" validator:"MMDD"`
+	DE30  *N     `format:"FIXED" length:"24" validator:"N"`
+	DE32  *N     `format:"LLVAR" length:"11" validator:"N"`
+	DE33  *N     `format:"LLVAR" length:"11" validator:"N"`
+	DE34  *N     `format:"LLVAR" length:"28" validator:"N"`
+	DE35  *Z     `format:"LLVAR" length:"37" validator:"Z"`
+	DE37  *ANP   `format:"FIXED" length:"12" validator:"ANP"`
+	DE38  *ANP   `format:"FIXED" length:"6" validator:"ANP"`
+	DE39  *N     `format:"FIXED" length:"3" validator:"N"`
+	DE41  *ANS   `format:"FIXED" length:"8" validator:"ANS"`
+	DE42  *ANS   `format:"FIXED" length:"15" validator:"ANS"`
+	DE43  *ANS   `format:"LLVAR" length:"99" validator:"ANS"`
+	DE46  *ANS   `format:"LLLVAR" length:"186" validator:"ANS"`
+	DE47  *ANS   `format:"LLLVAR" length:"999" validator:"ANS"`
+	DE48  *ANS   `format:"LLLVAR" length:"999" validator:"ANS"`
+	DE49  *N     `format:"FIXED" length:"3" validator:"N"`
+	DE50  *N     `format:"FIXED" length:"3" validator:"N"`
+	DE51  *N     `format:"FIXED" length:"3" validator:"N"`
+	DE52  *B     `format:"FIXED" length:"64" validator:"B"`
+	DE54  *ANS   `format:"LLLVAR" length:"120" validator:"ANS"`
+	DE56  *N     `format:"LLVAR" length:"35" validator:"N"`
+	DE57  *N     `format:"FIXED" length:"3" validator:"N"`
+	DE58  *N     `format:"LLVAR" length:"11" validator:"N"`
+	DE59  *ANS   `format:"LLLVAR" length:"999" validator:"ANS"`
+	DE62  *N     `format:"FIXED" length:"6" validator:"N"`
+	DE63  *N     `format:"FIXED" length:"4" validator:"MMDD"`
+	DE66  *ANS   `format:"LLLVAR" length:"204" validator:"ANS"`
+	DE72  *ANS   `format:"LLLVAR" length:"999" validator:"ANS"`
+	DE93  *N     `format:"LLVAR" length:"11" validator:"N"`
+	DE94  *N     `format:"LLVAR" length:"11" validator:"N"`
+	DE95  *ANS   `format:"LLLLVAR" length:"9999" validator:"ANS"`
+	DE96  *ANS   `format:"LLLVAR" length:"100" validator:"ANS"`
+	DE100 *N     `format:"LLVAR" length:"11" validator:"N"`
+	DE101 *ANS   `format:"LLVAR" length:"17" validator:"ANS"`
+	DE102 *ANS   `format:"LLVAR" length:"28" validator:"ANS"`
+	DE103 *ANS   `format:"LLVAR" length:"28" validator:"ANS"`
+	DE111 *ANS   `format:"LLLLVAR" length:"9999" validator:"ANS"`
+	DE123 *ANS   `format:"LLLVAR" length:"999" validator:"ANS"`
+	DE124 *ANS   `format:"LLLVAR" length:"999" validator:"ANS"`
+	DE125 *ANS   `format:"LLLVAR" length:"999" validator:"ANS"`
+	DE126 *ANS   `format:"LLLVAR" length:"999" validator:"ANS"`
+	DE127 *ANS   `format:"LLLLVAR" length:"9999" validator:"ANS"`
+	DE128 *ANS   `format:"LLLLLVAR" length:"99999" validator:"ANS"`
 }
 
 func (m *Message) Encode() ([]byte, error) {
@@ -119,6 +119,7 @@ func (m *Message) Encode() ([]byte, error) {
 		// e.g. LLVAR means that length indicator is encoded in the first 2 byte
 		// in this case length means "maximum length
 		format := sf.Tag.Get("format")
+		validator := sf.Tag.Get("validator")
 
 		f := v.Field(i).Interface().(field)
 
@@ -131,7 +132,7 @@ func (m *Message) Encode() ([]byte, error) {
 		}
 
 		// encode field, append it to data
-		d, err := f.Encode(m.encoder, length, format)
+		d, err := f.Encode(m.encoder, length, format, validator)
 		if err != nil {
 			return nil, err
 		}
