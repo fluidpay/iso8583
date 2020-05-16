@@ -44,7 +44,7 @@ func (n *N) Encode(encoder, length int, format, validator string) ([]byte, error
 			return nil, errors.New("invalid value length")
 		}
 	} else {
-		lInd, err := lengthIndicator(encoder, length, format)
+		lInd, err := lengthIndicator(encoder, len(val), format)
 		if err != nil {
 			return nil, err
 		}
@@ -77,13 +77,32 @@ func NewAlphanumeric(value string) *AN {
 
 func (an *AN) Encode(encoder, length int, format, validator string) ([]byte, error) {
 	val := an.value
-	if len(val) < length {
-		val = append(val, bytes.Repeat([]byte(" "), length-len(val))...)
+	if err := validate(string(val), validator); err != nil {
+		return []byte{}, err
 	}
-	if len(val) != length {
-		return nil, errors.New("invalid value length")
+	// if field has fixed length, add right padding with ' ', else
+	// add length prefix in specific format
+	if format == "FIXED" {
+		if len(val) < length {
+			val = append(val, bytes.Repeat([]byte(" "), length-len(val))...)
+		}
+		if len(val) != length {
+			return nil, errors.New("invalid value length")
+		}
+	} else {
+		lInd, err := lengthIndicator(encoder, len(val), format)
+		if err != nil {
+			return nil, err
+		}
+		val = append(lInd, val...)
 	}
-	return val, nil
+
+	switch encoder {
+	case BCDIC:
+		panic("implement me")
+	default: //ASCII encoding
+		return val, nil
+	}
 }
 
 func (an *AN) Decode(raw []byte, encoder, length int) {
@@ -103,7 +122,33 @@ func NewBinary(value string) *B {
 }
 
 func (b *B) Encode(encoder, length int, format, validator string) ([]byte, error) {
-	panic("implement me")
+	val := b.value
+	if err := validate(string(val), validator); err != nil {
+		return []byte{}, err
+	}
+	// if field has fixed length, add right padding with ' ', else
+	// add length prefix in specific format
+	if format == "FIXED" {
+		if len(val) < length {
+			val = append(val, bytes.Repeat([]byte(" "), length-len(val))...)
+		}
+		if len(val) != length {
+			return nil, errors.New("invalid value length")
+		}
+	} else {
+		lInd, err := lengthIndicator(encoder, len(val), format)
+		if err != nil {
+			return nil, err
+		}
+		val = append(lInd, val...)
+	}
+
+	switch encoder {
+	case BCDIC:
+		panic("implement me")
+	default: //ASCII encoding
+		return val, nil
+	}
 }
 
 func (b *B) Decode(raw []byte, encoder, length int) {
@@ -123,7 +168,33 @@ func NewTrack2Code(value string) *Z {
 }
 
 func (z *Z) Encode(encoder, length int, format, validator string) ([]byte, error) {
-	panic("implement me")
+	val := z.value
+	if err := validate(string(val), validator); err != nil {
+		return []byte{}, err
+	}
+	// if field has fixed length, add right padding with ' ', else
+	// add length prefix in specific format
+	if format == "FIXED" {
+		if len(val) < length {
+			val = append(val, bytes.Repeat([]byte(" "), length-len(val))...)
+		}
+		if len(val) != length {
+			return nil, errors.New("invalid value length")
+		}
+	} else {
+		lInd, err := lengthIndicator(encoder, len(val), format)
+		if err != nil {
+			return nil, err
+		}
+		val = append(lInd, val...)
+	}
+
+	switch encoder {
+	case BCDIC:
+		panic("implement me")
+	default: //ASCII encoding
+		return val, nil
+	}
 }
 
 func (z *Z) Decode(raw []byte, encoder, length int) {
@@ -141,11 +212,37 @@ func NewANP(value string) *ANP {
 	return &ANP{[]byte(value)}
 }
 
-func (A *ANP) Encode(encoder, length int, format, validator string) ([]byte, error) {
-	panic("implement me")
+func (anp *ANP) Encode(encoder, length int, format, validator string) ([]byte, error) {
+	val := anp.value
+	if err := validate(string(val), validator); err != nil {
+		return []byte{}, err
+	}
+	// if field has fixed length, add right padding with ' ', else
+	// add length prefix in specific format
+	if format == "FIXED" {
+		if len(val) < length {
+			val = append(val, bytes.Repeat([]byte(" "), length-len(val))...)
+		}
+		if len(val) != length {
+			return nil, errors.New("invalid value length")
+		}
+	} else {
+		lInd, err := lengthIndicator(encoder, len(val), format)
+		if err != nil {
+			return nil, err
+		}
+		val = append(lInd, val...)
+	}
+
+	switch encoder {
+	case BCDIC:
+		panic("implement me")
+	default: //ASCII encoding
+		return val, nil
+	}
 }
 
-func (A *ANP) Decode(raw []byte, encoder, length int) {
+func (anp *ANP) Decode(raw []byte, encoder, length int) {
 	panic("implement me")
 }
 
@@ -162,7 +259,33 @@ func NewANS(value string) *ANS {
 }
 
 func (ans *ANS) Encode(encoder, length int, format, validator string) ([]byte, error) {
-	panic("implement me")
+	val := ans.value
+	if err := validate(string(val), validator); err != nil {
+		return []byte{}, err
+	}
+	// if field has fixed length, add right padding with ' ', else
+	// add length prefix in specific format
+	if format == "FIXED" {
+		if len(val) < length {
+			val = append(val, bytes.Repeat([]byte(" "), length-len(val))...)
+		}
+		if len(val) != length {
+			return nil, errors.New("invalid value length")
+		}
+	} else {
+		lInd, err := lengthIndicator(encoder, len(val), format)
+		if err != nil {
+			return nil, err
+		}
+		val = append(lInd, val...)
+	}
+
+	switch encoder {
+	case BCDIC:
+		panic("implement me")
+	default: //ASCII encoding
+		return val, nil
+	}
 }
 
 func (ans *ANS) Decode(raw []byte, encoder, length int) {
