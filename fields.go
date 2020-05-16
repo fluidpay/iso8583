@@ -3,6 +3,7 @@ package iso8583
 import (
 	"bytes"
 	"errors"
+	"fmt"
 )
 
 const (
@@ -13,7 +14,7 @@ const (
 )
 
 type field interface {
-	Encode(encoder, length int,format string) ([]byte, error)
+	Encode(encoder, length int, format, validator string) ([]byte, error)
 
 	Decode(raw []byte, encoder, length int)
 
@@ -28,16 +29,29 @@ func NewNumeric(value string) *N {
 	return &N{value: []byte(value)}
 }
 
-func (n *N) Encode(encoder, length int,format string) ([]byte, error) {
+func (n *N) Encode(encoder, length int, format, validator string) ([]byte, error) {
 	val := n.value
-	if len(val) < length {
-		val = append(bytes.Repeat([]byte("0"), length-len(val)), val...)
+	if err := validate(string(val), validator); err != nil {
+		return []byte{}, err
 	}
-	if len(val) != length {
-		return nil, errors.New("invalid value length")
+	// if field has fixed length, add left padding with '0', else
+	// add length prefix in specific format
+	if format == "FIXED" {
+		if len(val) < length {
+			val = append(bytes.Repeat([]byte("0"), length-len(val)), val...)
+		}
+		if len(val) != length {
+			return nil, errors.New("invalid value length")
+		}
+	} else {
+		lInd, err := lengthIndicator(encoder, length, format)
+		if err != nil {
+			return nil, err
+		}
+		val = append(lInd, val...)
 	}
-	switch encoder {
 
+	switch encoder {
 	case BCDIC:
 		panic("implement me")
 	default: //ASCII encoding
@@ -61,7 +75,7 @@ func NewAlphanumeric(value string) *AN {
 	return &AN{value: []byte(value)}
 }
 
-func (an *AN) Encode(encoder, length int,format string) ([]byte, error) {
+func (an *AN) Encode(encoder, length int, format, validator string) ([]byte, error) {
 	val := an.value
 	if len(val) < length {
 		val = append(val, bytes.Repeat([]byte(" "), length-len(val))...)
@@ -88,7 +102,7 @@ func NewBinary(value string) *B {
 	return &B{[]byte(value)}
 }
 
-func (b *B) Encode(encoder, length int,format string) ([]byte, error) {
+func (b *B) Encode(encoder, length int, format, validator string) ([]byte, error) {
 	panic("implement me")
 }
 
@@ -108,7 +122,7 @@ func NewTrack2Code(value string) *Z {
 	return &Z{[]byte(value)}
 }
 
-func (z *Z) Encode(encoder, length int,format string) ([]byte, error) {
+func (z *Z) Encode(encoder, length int, format, validator string) ([]byte, error) {
 	panic("implement me")
 }
 
@@ -127,7 +141,7 @@ func NewANP(value string) *ANP {
 	return &ANP{[]byte(value)}
 }
 
-func (A *ANP) Encode(encoder, length int,format string) ([]byte, error) {
+func (A *ANP) Encode(encoder, length int, format, validator string) ([]byte, error) {
 	panic("implement me")
 }
 
@@ -147,7 +161,7 @@ func NewANS(value string) *ANS {
 	return &ANS{[]byte(value)}
 }
 
-func (ans *ANS) Encode(encoder, length int,format string) ([]byte, error) {
+func (ans *ANS) Encode(encoder, length int, format, validator string) ([]byte, error) {
 	panic("implement me")
 }
 
@@ -157,4 +171,53 @@ func (ans *ANS) Decode(raw []byte, encoder, length int) {
 
 func (ans *ANS) isEmpty() bool {
 	return len(ans.value) == 0
+}
+
+func lengthIndicator(encoder, length int, format string) ([]byte, error) {
+	switch format {
+	case "LLVAR":
+		if length < 0 || length > 99 {
+			return nil, errors.New("invalid length for LLVAR")
+		}
+		return []byte(fmt.Sprintf("%02d", length)), nil
+	case "LLLVAR":
+		if length < 0 || length > 999 {
+			return nil, errors.New("invalid length for LLLVAR")
+		}
+		return []byte(fmt.Sprintf("%03d", length)), nil
+
+	case "LLLLVAR":
+		if length < 0 || length > 9999 {
+			return nil, errors.New("invalid length for LLLLVAR")
+		}
+		return []byte(fmt.Sprintf("%04d", length)), nil
+
+	case "LLLLLVAR":
+		if length < 0 || length > 99999 {
+			return nil, errors.New("invalid length for LLLLLVAR")
+		}
+		return []byte(fmt.Sprintf("%05d", length)), nil
+	case "FIXED":
+		return []byte{}, nil
+	default:
+		return []byte{}, errors.New("invalid format")
+	}
+}
+
+func validate(value, validator string) error {
+	// TODO
+	switch validator {
+	case "N":
+	case "B":
+	case "AN":
+	case "Z":
+	case "ANP":
+	case "ANS":
+	case "YYMMDDHHMMSS":
+	case "MMDDHHMMSS":
+	case "YYMM":
+	case "MMDD":
+	case "YYMMDD":
+	}
+	return nil
 }
