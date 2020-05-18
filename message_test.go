@@ -79,3 +79,32 @@ func TestBalanceInquiryFromAnATM(t *testing.T) {
 		t.Error("invalid encoding")
 	}
 }
+
+func TestBalanceInquiryResponse(t *testing.T) {
+	m := &Message{
+		DE2:   NewNumeric("00000000000000"),
+		DE3:   NewNumeric("312000"),
+		DE7:   NewNumeric("0108204506"),
+		DE11:  NewNumeric("7530"),
+		DE12:  NewNumeric("950108144500"),
+		DE32:  NewNumeric("10111111118"),
+		DE39:  NewNumeric("000"),
+		DE54:  NewANS("2001840C0000007000002002840C000000600000"),
+		DE102: NewANS("00000012456184"),
+	}
+	m.encoder=ASCII
+	m.Mti = "1110"
+	b,err := m.Encode()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1) != "E2300001020004000000000004000000" {
+		t.Error("invalid bitmap")
+	}
+	expected := "1110E23000010200040000000000040000001400000000000000312000010820450600753095010814450011101111111180000402001840C0000007000002002840C0000006000001400000012456184"
+	if expected != string(b) {
+		t.Log(expected)
+		t.Log(string(b))
+		t.Error("invalid encoding")
+	}
+}
