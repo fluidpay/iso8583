@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"strconv"
 )
 
 const (
@@ -123,7 +124,19 @@ type B struct {
 	value []byte
 }
 
+// New Binary converts 64bit binary to Hexadecimal form, each 4 bits to 1 hexadecimal character
 func NewBinary(value string) *B {
+	b, _ := strconv.ParseUint(value, 10, 64)
+	return &B{[]byte(bitmapHex(b))}
+}
+
+// New Binary converts 64bit binary to Hexadecimal form, each 4 bits to 1 hexadecimal character
+func NewBinaryUint64(bin uint64) *B {
+	return &B{[]byte(bitmapHex(bin))}
+}
+
+
+func NewBinaryHex(value string) *B {
 	return &B{[]byte(value)}
 }
 
@@ -131,25 +144,6 @@ func (b *B) Encode(encoder, length int, format, validator string) ([]byte, error
 	val := b.value
 	if err := validate(string(val), validator); err != nil {
 		return []byte{}, err
-	}
-	// if field has fixed length, add right padding with ' ', else
-	// add length prefix in specific format
-	if format == "" {
-		if len(val) < length {
-			val = append(val, bytes.Repeat([]byte(" "), length-len(val))...)
-		}
-		if len(val) != length {
-			return nil, errors.New("invalid value length")
-		}
-	} else {
-		if len(val) > length {
-			return nil, errors.New("invalid value length")
-		}
-		lInd, err := lengthIndicator(encoder, len(val), format)
-		if err != nil {
-			return nil, err
-		}
-		val = append(lInd, val...)
 	}
 
 	switch encoder {
