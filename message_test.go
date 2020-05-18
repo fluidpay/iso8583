@@ -63,7 +63,7 @@ func TestBalanceInquiryFromAnATM(t *testing.T) {
 		DE42: NewANS(""),
 		DE43: NewANS("NJ NEWARK          123 PINE STREET      USWRIGHT AID DRUGS"),
 		DE49: NewNumeric("840"),
-		DE52: NewBinary("CD2C09CDCA80244C"),
+		DE52: NewBinaryHex("CD2C09CDCA80244C"),
 	}
 	m.Mti = "1100"
 	b, err := m.Encode()
@@ -76,6 +76,8 @@ func TestBalanceInquiryFromAnATM(t *testing.T) {
 	}
 	expected := "11006230450120E0900014000000000000003120000108204503007530950108144500601121120121014C10011101111111182656258101223070=99120041947NY030400               58NJ NEWARK          123 PINE STREET      USWRIGHT AID DRUGS840CD2C09CDCA80244C"
 	if string(b) != expected {
+		t.Log(expected)
+		t.Log(string(b))
 		t.Error("invalid encoding")
 	}
 }
