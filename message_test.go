@@ -20,18 +20,18 @@ func TestMessageWithFields234(t *testing.T) {
 
 func TestNewMessageWithSecondaryBitmap(t *testing.T) {
 	m := &Message{
-		DE2:   NewNumeric("4846811212"),
-		DE3:   NewNumeric("201234"),
-		DE4:   NewNumeric("10000000"),
-		DE7:   NewNumeric("1107221800"),
-		DE11:  NewNumeric("000001"),
-		DE12:  NewNumeric("161204171926"),
-		DE22:  NewAlphanumeric("FABCDE123ABD"),
-		DE32:  NewNumeric("414243"),
-		DE39:  NewNumeric("000"),
-		DE41:  NewANS("termid12"),
-		DE43:  NewANS("Community1"),
-		DE102: NewANS("12341234234"),
+		DE2:   NewNumeric("4846811212"),        // Primary Account Number
+		DE3:   NewNumeric("201234"),            // Processing Code
+		DE4:   NewNumeric("10000000"),          // Amount, Transaction
+		DE7:   NewNumeric("1107221800"),        // Date And Time, Transmission
+		DE11:  NewNumeric("000001"),            // Systems Trace Audit Number
+		DE12:  NewNumeric("161204171926"),      // Date And Time, Local Transaction
+		DE22:  NewAlphanumeric("FABCDE123ABD"), // Point Of Service Data Code
+		DE32:  NewNumeric("414243"),            // Acquiring Institution Identification Code
+		DE39:  NewNumeric("000"),               // Action Code
+		DE41:  NewANS("termid12"),              // Card Acceptor Terminal Identification
+		DE43:  NewANS("Community1"),            // Card Acceptor Name/Location
+		DE102: NewANS("12341234234"),           // Account Identification 1
 	}
 	m.Mti = "1200"
 	m.encoder = ASCII
@@ -49,21 +49,21 @@ func TestNewMessageWithSecondaryBitmap(t *testing.T) {
 
 func TestBalanceInquiryFromAnATM(t *testing.T) {
 	m := &Message{
-		DE2:  NewNumeric("00000000000000"),
-		DE3:  NewNumeric("312000"),
-		DE7:  NewNumeric("0108204503"),
-		DE11: NewNumeric("007530"),
-		DE12: NewNumeric("950108144500"),
-		DE18: NewNumeric("6011"),
-		DE22: NewAlphanumeric("21120121014C"),
-		DE24: NewNumeric("100"),
-		DE32: NewNumeric("10111111118"),
-		DE35: NewTrack2Code("56258101223070=99120041947"),
-		DE41: NewANS("NY030400"),
-		DE42: NewANS(""),
-		DE43: NewANS("NJ NEWARK          123 PINE STREET      USWRIGHT AID DRUGS"),
-		DE49: NewNumeric("840"),
-		DE52: NewBinaryHex("CD2C09CDCA80244C"),
+		DE2:  NewNumeric("00000000000000"),                                         // Primary Account Number
+		DE3:  NewNumeric("312000"),                                                 // Processing Code
+		DE7:  NewNumeric("0108204503"),                                             // Date And Time, Transmission
+		DE11: NewNumeric("007530"),                                                 // Systems Trace Audit Number
+		DE12: NewNumeric("950108144500"),                                           // Date And Time, Local Transaction
+		DE18: NewNumeric("6011"),                                                   // Merchant Type
+		DE22: NewAlphanumeric("21120121014C"),                                      // Point Of Service Data Code
+		DE24: NewNumeric("100"),                                                    // Function Code
+		DE32: NewNumeric("10111111118"),                                            // Acquiring Institution Identification Code
+		DE35: NewTrack2Code("56258101223070=99120041947"),                          // Track 2 Data
+		DE41: NewANS("NY030400"),                                                   // Card Acceptor Terminal Identification
+		DE42: NewANS(""),                                                           // Card Acceptor Identification Code
+		DE43: NewANS("NJ NEWARK          123 PINE STREET      USWRIGHT AID DRUGS"), // Card Acceptor Name/Location
+		DE49: NewNumeric("840"),                                                    // Currency Code, Transaction
+		DE52: NewBinaryHex("CD2C09CDCA80244C"),                                     // Personal Identification Number Data
 	}
 	m.Mti = "1100"
 	b, err := m.Encode()
@@ -84,19 +84,19 @@ func TestBalanceInquiryFromAnATM(t *testing.T) {
 
 func TestBalanceInquiryResponse(t *testing.T) {
 	m := &Message{
-		DE2:   NewNumeric("00000000000000"),
-		DE3:   NewNumeric("312000"),
-		DE7:   NewNumeric("0108204506"),
-		DE11:  NewNumeric("7530"),
-		DE12:  NewNumeric("950108144500"),
-		DE32:  NewNumeric("10111111118"),
-		DE39:  NewNumeric("000"),
-		DE54:  NewANS("2001840C0000007000002002840C000000600000"),
-		DE102: NewANS("00000012456184"),
+		DE2:   NewNumeric("00000000000000"),                       // Primary Account Number
+		DE3:   NewNumeric("312000"),                               // Processing Code
+		DE7:   NewNumeric("0108204506"),                           // Date And Time, Transmission
+		DE11:  NewNumeric("7530"),                                 // Systems Trace Audit Number
+		DE12:  NewNumeric("950108144500"),                         // Date And Time, Local Transaction
+		DE32:  NewNumeric("10111111118"),                          // Acquiring Institution Identification Code
+		DE39:  NewNumeric("000"),                                  // Action Code
+		DE54:  NewANS("2001840C0000007000002002840C000000600000"), // Amounts, Additional
+		DE102: NewANS("00000012456184"),                           // Account Identification 1
 	}
-	m.encoder=ASCII
+	m.encoder = ASCII
 	m.Mti = "1110"
-	b,err := m.Encode()
+	b, err := m.Encode()
 	if err != nil {
 		t.Fatal(err)
 	}
