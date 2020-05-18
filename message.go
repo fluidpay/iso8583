@@ -1,6 +1,7 @@
 package iso8583
 
 import (
+	"errors"
 	"reflect"
 	"strconv"
 	"strings"
@@ -83,12 +84,16 @@ type Message struct {
 
 func (m *Message) Encode() ([]byte, error) {
 	res := make([]byte, 0)
+
 	// append mti
-	mti, err := encodeMti(m.Mti)
-	if err != nil {
-		return nil, err
+	if len(m.Mti) != 4 {
+		return []byte{}, errors.New("invalid MTI length")
 	}
-	res = append(res, mti...)
+	switch m.encoder {
+	case BCDIC:
+	case ASCII:
+		res = append(res, []byte(m.Mti)...)
+	}
 
 	// initialize bitmaps
 	var bitmapPrimary uint64
