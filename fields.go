@@ -44,6 +44,9 @@ func (n *N) Encode(encoder, length int, format, validator string) ([]byte, error
 			return nil, errors.New("invalid value length")
 		}
 	} else {
+		if len(val) > length {
+			return nil, errors.New("invalid value length")
+		}
 		lInd, err := lengthIndicator(encoder, len(val), format)
 		if err != nil {
 			return nil, err
@@ -90,6 +93,9 @@ func (an *AN) Encode(encoder, length int, format, validator string) ([]byte, err
 			return nil, errors.New("invalid value length")
 		}
 	} else {
+		if len(val) > length {
+			return nil, errors.New("invalid value length")
+		}
 		lInd, err := lengthIndicator(encoder, len(val), format)
 		if err != nil {
 			return nil, err
@@ -136,6 +142,9 @@ func (b *B) Encode(encoder, length int, format, validator string) ([]byte, error
 			return nil, errors.New("invalid value length")
 		}
 	} else {
+		if len(val) > length {
+			return nil, errors.New("invalid value length")
+		}
 		lInd, err := lengthIndicator(encoder, len(val), format)
 		if err != nil {
 			return nil, err
@@ -182,6 +191,9 @@ func (z *Z) Encode(encoder, length int, format, validator string) ([]byte, error
 			return nil, errors.New("invalid value length")
 		}
 	} else {
+		if len(val) > length {
+			return nil, errors.New("invalid value length")
+		}
 		lInd, err := lengthIndicator(encoder, len(val), format)
 		if err != nil {
 			return nil, err
@@ -227,6 +239,9 @@ func (anp *ANP) Encode(encoder, length int, format, validator string) ([]byte, e
 			return nil, errors.New("invalid value length")
 		}
 	} else {
+		if len(val) > length {
+			return nil, errors.New("invalid value length")
+		}
 		lInd, err := lengthIndicator(encoder, len(val), format)
 		if err != nil {
 			return nil, err
@@ -273,6 +288,9 @@ func (ans *ANS) Encode(encoder, length int, format, validator string) ([]byte, e
 			return nil, errors.New("invalid value length")
 		}
 	} else {
+		if len(val) > length {
+			return nil, errors.New("invalid value length")
+		}
 		lInd, err := lengthIndicator(encoder, len(val), format)
 		if err != nil {
 			return nil, err
