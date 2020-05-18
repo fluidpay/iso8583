@@ -135,7 +135,6 @@ func NewBinaryUint64(bin uint64) *B {
 	return &B{[]byte(bitmapHex(bin))}
 }
 
-
 func NewBinaryHex(value string) *B {
 	return &B{[]byte(value)}
 }
@@ -340,19 +339,51 @@ func lengthIndicator(encoder, length int, format string) ([]byte, error) {
 }
 
 func validate(value, validator string) error {
-	// TODO
 	switch validator {
 	case "N":
+		if !numberRegex.MatchString(value) {
+			return errors.New("invalid number value format: " + value)
+		}
 	case "B":
+		if !binaryRegex.MatchString(value) {
+			return errors.New("invalid binary value format: " + value)
+		}
 	case "AN":
+		if !alphaNumericRegex.MatchString(value) {
+			return errors.New("invalid alphanumeric value format: " + value)
+		}
 	case "Z":
+		if !track2Regex.MatchString(value) {
+			return errors.New("only Track 2 code set characters (0–9, =, D) are allowed,invalid value format: " + value)
+		}
 	case "ANP":
+		if !anpRegex.MatchString(value) {
+			return errors.New("alphabetic, numeric, and special characters are allowed,invalid value format: " + value)
+		}
 	case "ANS":
+		if !ansRegex.MatchString(value) {
+			return errors.New("alphabetic, numeric, and special characters(ASCII printable characters) are allowed,invalid value format: " + value)
+		}
 	case "YYMMDDHHMMSS":
+		if !yymmddhhmmssRegex.MatchString(value) {
+			return errors.New("invalid YYMMDDHHMMSS value format: " + value)
+		}
 	case "MMDDHHMMSS":
+		if !mmddhhmmssRegex.MatchString(value) {
+			return errors.New("invalid MMDDHHMMSS value format: " + value)
+		}
 	case "YYMM":
+		if !yymmRegex.MatchString(value) {
+			return errors.New("invalid YYMM value format: " + value)
+		}
 	case "MMDD":
+		if !mmddRegex.MatchString(value) {
+			return errors.New("invalid MMDD value format: " + value)
+		}
 	case "YYMMDD":
+		if !yymmddRegex.MatchString(value) {
+			return errors.New("invalid YYMMDD value format: " + value)
+		}
 	}
 	return nil
 }

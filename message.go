@@ -37,7 +37,7 @@ type Message struct {
 	DE24  *N     `format:"" length:"3" validator:"N"`
 	DE25  *N     `format:"" length:"4" validator:"N"`
 	DE26  *N     `format:"" length:"4" validator:"N"`
-	DE28  *N     `format:"" length:"6" validator:"MMDD"`
+	DE28  *N     `format:"" length:"6" validator:"YYMMDD"`
 	DE30  *N     `format:"" length:"24" validator:"N"`
 	DE32  *N     `format:"LLVAR" length:"11" validator:"N"`
 	DE33  *N     `format:"LLVAR" length:"11" validator:"N"`
