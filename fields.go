@@ -36,7 +36,7 @@ func (n *N) Encode(encoder, length int, format, validator string) ([]byte, error
 	}
 	// if field has fixed length, add left padding with '0', else
 	// add length prefix in specific format
-	if format == "FIXED" {
+	if format == "" {
 		if len(val) < length {
 			val = append(bytes.Repeat([]byte("0"), length-len(val)), val...)
 		}
@@ -82,7 +82,7 @@ func (an *AN) Encode(encoder, length int, format, validator string) ([]byte, err
 	}
 	// if field has fixed length, add right padding with ' ', else
 	// add length prefix in specific format
-	if format == "FIXED" {
+	if format == "" {
 		if len(val) < length {
 			val = append(val, bytes.Repeat([]byte(" "), length-len(val))...)
 		}
@@ -128,7 +128,7 @@ func (b *B) Encode(encoder, length int, format, validator string) ([]byte, error
 	}
 	// if field has fixed length, add right padding with ' ', else
 	// add length prefix in specific format
-	if format == "FIXED" {
+	if format == "" {
 		if len(val) < length {
 			val = append(val, bytes.Repeat([]byte(" "), length-len(val))...)
 		}
@@ -174,7 +174,7 @@ func (z *Z) Encode(encoder, length int, format, validator string) ([]byte, error
 	}
 	// if field has fixed length, add right padding with ' ', else
 	// add length prefix in specific format
-	if format == "FIXED" {
+	if format == "" {
 		if len(val) < length {
 			val = append(val, bytes.Repeat([]byte(" "), length-len(val))...)
 		}
@@ -219,7 +219,7 @@ func (anp *ANP) Encode(encoder, length int, format, validator string) ([]byte, e
 	}
 	// if field has fixed length, add right padding with ' ', else
 	// add length prefix in specific format
-	if format == "FIXED" {
+	if format == "" {
 		if len(val) < length {
 			val = append(val, bytes.Repeat([]byte(" "), length-len(val))...)
 		}
@@ -265,7 +265,7 @@ func (ans *ANS) Encode(encoder, length int, format, validator string) ([]byte, e
 	}
 	// if field has fixed length, add right padding with ' ', else
 	// add length prefix in specific format
-	if format == "FIXED" {
+	if format == "" {
 		if len(val) < length {
 			val = append(val, bytes.Repeat([]byte(" "), length-len(val))...)
 		}
@@ -320,7 +320,7 @@ func lengthIndicator(encoder, length int, format string) ([]byte, error) {
 			return nil, errors.New("invalid length for LLLLLVAR")
 		}
 		return []byte(fmt.Sprintf("%05d", length)), nil
-	case "FIXED":
+	case "":
 		return []byte{}, nil
 	default:
 		return []byte{}, errors.New("invalid format")
