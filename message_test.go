@@ -155,3 +155,51 @@ func TestPurchaseWithCashBackRequest(t *testing.T) {
 		t.Error("invalid encoding")
 	}
 }
+
+func TestPurchaseWithCashBackPartialApprovalToAquirer(t *testing.T) {
+	m := &Message{
+		DE2:   NewNumeric("0000000000000000"),                                       // Primary Account Number
+		DE3:   NewNumeric("092000"),                                                 // Processing Code
+		DE4:   NewNumeric("15000"),                                                  // Amount, Transaction
+		DE5:   NewNumeric("15000"),                                                  // Amount, Reconciliation
+		DE7:   NewNumeric("0123205001"),                                             // Date And Time, Transmission
+		DE11:  NewNumeric("030402"),                                                 // Systems Trace Audit Number
+		DE12:  NewNumeric("950123154952"),                                           // Date And Time, Local Transaction
+		DE18:  NewNumeric("5912"),                                                   // Merchant Type
+		DE22:  NewAlphanumeric("21010121314C"),                                      // Point of Service Data Code
+		DE24:  NewNumeric("200"),                                                    // Function Code
+		DE26:  NewNumeric("5912"),                                                   // Card Acceptor Business Code
+		DE28:  NewNumeric("950123"),                                                 // Date, Reconciliation
+		DE30:  NewNumeric("000000020000000000020000"),                               // Amounts, Original
+		DE32:  NewNumeric("10076401251"),                                            // Acquiring Institution Identification Code
+		DE33:  NewNumeric("10111111118"),                                            // Forwarding Institution Identification Code
+		DE35:  NewTrack2Code("54212248887288158=99120010109"),                       // Track 2 Data
+		DE37:  NewANP("012401"),                                                     // Retrieval Reference Number
+		DE39:  NewNumeric("002"),                                                    // Action code
+		DE41:  NewANS("NJ020111"),                                                   // Card Acceptor Terminal Identification
+		DE42:  NewANS("73420"),                                                      // Card Acceptor Identification Code
+		DE43:  NewANS("NJ NEWARK          123 PINE STREET      USWRIGHT AID DRUGS"), // Card Acceptor Name/Location
+		DE46:  NewANS("000"),                                                        // Amounts, Fees
+		DE49:  NewNumeric("840"),                                                    // Currency Code, Transaction
+		DE62:  NewNumeric("777001"),                                                 // Network Identifier
+		DE63:  NewNumeric("0123"),                                                   //  Network Settlement Date
+		DE100: NewNumeric("10222222226"),                                            // Receiving Institution Identification Code
+	}
+	m.encoder = ASCII
+	m.Mti = "1210"
+	b, err := m.Encode()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1) != "FA304555AAE480060000000010000000" {
+		t.Log("FA304555AAE480060000000010000000")
+		t.Log(bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1))
+		t.Error("invalid bitmap")
+	}
+	expected := "1210FA304555AAE4800600000000100000001600000000000000000920000000000150000000000150000123205001030402950123154952591221010121314C2005912950123000000020000000000020000111007640125111101111111182954212248887288158=99120010109012401      002NJ02011173420          58NJ NEWARK          123 PINE STREET      USWRIGHT AID DRUGS00300084077700101231110222222226"
+	if expected != string(b) {
+		t.Log(expected)
+		t.Log(string(b))
+		t.Error("invalid encoding")
+	}
+}
