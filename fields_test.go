@@ -7,49 +7,49 @@ import (
 
 func TestNumericFixed(t *testing.T) {
 	n := NewNumeric("12345")
-	b,err := n.Encode(ASCII,5,"","N")
+	b, err := n.Encode(ASCII, 5, "", "N")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(b,[]byte("12345")) {
+	if !bytes.Equal(b, []byte("12345")) {
 		t.Error("bad encoding")
 	}
 
 	n = NewNumeric("12345")
-	b,err = n.Encode(ASCII,6,"","N")
+	b, err = n.Encode(ASCII, 6, "", "N")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(b,[]byte("012345")) {
+	if !bytes.Equal(b, []byte("012345")) {
 		t.Error("bad encoding")
 	}
 
 	n = NewNumeric("12345")
-	b,err = n.Encode(ASCII,10,"","N")
+	b, err = n.Encode(ASCII, 10, "", "N")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(b,[]byte("0000012345")) {
+	if !bytes.Equal(b, []byte("0000012345")) {
 		t.Error("bad encoding")
 	}
 }
 
 func TestNumericLLVAR(t *testing.T) {
 	n := NewNumeric("12345")
-	b,err := n.Encode(ASCII,19,"LLVAR","N")
+	b, err := n.Encode(ASCII, 19, "LLVAR", "N")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(b,[]byte("0512345")) {
+	if !bytes.Equal(b, []byte("0512345")) {
 		t.Error("bad encoding")
 	}
 
-	b, err = n.Encode(ASCII,4,"LLVAR","N")
+	b, err = n.Encode(ASCII, 4, "LLVAR", "N")
 	if err == nil {
 		t.Error("expecting error, length 4 < len(n)")
 	}
 
-	b, err = n.Encode(ASCII,5,"LLVAR","N")
+	b, err = n.Encode(ASCII, 5, "LLVAR", "N")
 	if err != nil {
 		t.Error(err)
 	}
@@ -57,20 +57,20 @@ func TestNumericLLVAR(t *testing.T) {
 
 func TestNumericLLLVAR(t *testing.T) {
 	n := NewNumeric("12345")
-	b,err := n.Encode(ASCII,19,"LLLVAR","N")
+	b, err := n.Encode(ASCII, 19, "LLLVAR", "N")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(b,[]byte("00512345")) {
+	if !bytes.Equal(b, []byte("00512345")) {
 		t.Error("bad encoding")
 	}
 
-	b, err = n.Encode(ASCII,4,"LLLVAR","N")
+	b, err = n.Encode(ASCII, 4, "LLLVAR", "N")
 	if err == nil {
 		t.Error("expecting error, length 4 < len(n)")
 	}
 
-	b, err = n.Encode(ASCII,5,"LLLVAR","N")
+	b, err = n.Encode(ASCII, 5, "LLLVAR", "N")
 	if err != nil {
 		t.Error(err)
 	}
@@ -78,33 +78,33 @@ func TestNumericLLLVAR(t *testing.T) {
 
 func TestAlphaNumericFixed(t *testing.T) {
 	n := NewAlphanumeric("12AN")
-	b,err := n.Encode(ASCII,10,"","AN")
+	b, err := n.Encode(ASCII, 10, "", "AN")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(b,[]byte("12AN      ")) {
+	if !bytes.Equal(b, []byte("12AN      ")) {
 		t.Error("bad encoding")
 	}
 }
 
 func TestAlphaNumericLLVAR(t *testing.T) {
 	n := NewAlphanumeric("12ANABCDEFGHTCASDASSAASCSACSACSACSACSACACSACSACS")
-	b,err := n.Encode(ASCII,99,"LLVAR","AN")
+	b, err := n.Encode(ASCII, 99, "LLVAR", "AN")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(b,[]byte("4812ANABCDEFGHTCASDASSAASCSACSACSACSACSACACSACSACS")) {
+	if !bytes.Equal(b, []byte("4812ANABCDEFGHTCASDASSAASCSACSACSACSACSACACSACSACS")) {
 		t.Error("bad encoding")
 	}
 }
 
 func TestAlphaNumericLLLVAR(t *testing.T) {
 	n := NewAlphanumeric("12ANABCDEFGHTCASDASSAASCSACSACSACSACSACACSACSACS")
-	b,err := n.Encode(ASCII,99,"LLLVAR","AN")
+	b, err := n.Encode(ASCII, 99, "LLLVAR", "AN")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Equal(b,[]byte("04812ANABCDEFGHTCASDASSAASCSACSACSACSACSACACSACSACS")) {
+	if !bytes.Equal(b, []byte("04812ANABCDEFGHTCASDASSAASCSACSACSACSACSACACSACSACS")) {
 		t.Error("bad encoding")
 	}
 }

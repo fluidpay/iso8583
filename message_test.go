@@ -422,5 +422,3 @@ func TestNetworkManagementRequestResponse(t *testing.T) {
 		t.Error("invalid encoding")
 	}
 }
-
-
