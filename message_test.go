@@ -2,6 +2,7 @@ package iso8583
 
 import (
 	"bytes"
+	"reflect"
 	"testing"
 )
 
@@ -155,3 +156,42 @@ func TestPurchaseWithCashBackRequest(t *testing.T) {
 		t.Error("invalid encoding")
 	}
 }
+
+func TestMessageDecode(t *testing.T) {
+	msgToDecode := "1200F230040102A0000000000000040000001048468112122012340000100000001107221800000001161204171926FABCDE123ABD06414243000termid1210Community11112341234234"
+	m := &Message{}
+	m.encoder = ASCII
+	err := m.Decode([]byte(msgToDecode))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1) != "F230040102A000000000000004000000" {
+		t.Error("invalid bitmap")
+	}
+	//
+	//s,_ := json.MarshalIndent(m,"","\t")
+	//t.Log(string(s))
+
+
+
+	m1 := &Message{
+		DE2:   NewNumeric("4846811212"),        // Primary Account Number
+		DE3:   NewNumeric("201234"),            // Processing Code
+		DE4:   NewNumeric("10000000"),          // Amount, Transaction
+		DE7:   NewNumeric("1107221800"),        // Date And Time, Transmission
+		DE11:  NewNumeric("000001"),            // Systems Trace Audit Number
+		DE12:  NewNumeric("161204171926"),      // Date And Time, Local Transaction
+		DE22:  NewAlphanumeric("FABCDE123ABD"), // Point Of Service Data Code
+		DE32:  NewNumeric("414243"),            // Acquiring Institution Identification Code
+		DE39:  NewNumeric("000"),               // Action Code
+		DE41:  NewANS("termid12"),              // Card Acceptor Terminal Identification
+		DE43:  NewANS("Community1"),            // Card Acceptor Name/Location
+		DE102: NewANS("12341234234"),           // Account Identification 1
+	}
+	m1.Mti = "1200"
+	m1.encoder = ASCII
+	if !reflect.DeepEqual(m,m1) {
+		t.Error("not equal")
+	}
+}
+

@@ -108,3 +108,21 @@ func TestAlphaNumericLLLVAR(t *testing.T) {
 		t.Error("bad encoding")
 	}
 }
+
+func TestNDecode(t *testing.T) {
+	b := []byte("0512345")
+	n := NewNumeric("")
+	_,err := n.Decode(b,ASCII,19,"LLVAR","N")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(string(n.value))
+
+	b = []byte("0000012356")
+	nn,err := n.Decode(b,ASCII,10,"","")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(string(n.value))
+	t.Log(nn)
+}

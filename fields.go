@@ -17,7 +17,7 @@ const (
 type field interface {
 	Encode(encoder, length int, format, validator string) ([]byte, error)
 
-	Decode(raw []byte, encoder, length int)
+	Decode(b []byte, encoder, length int, format, validator string) (int, error)
 
 	isEmpty() bool
 }
@@ -63,8 +63,28 @@ func (n *N) Encode(encoder, length int, format, validator string) ([]byte, error
 	}
 }
 
-func (n *N) Decode(raw []byte, encoder, length int) {
-	panic("implement me")
+func (n *N) Decode(raw []byte, encoder, length int, format, validator string) (int, error) {
+	var nextFieldOffset int
+
+	switch encoder {
+	case BCDIC:
+	case ASCII:
+		if format == "" {
+			//n.value = bytes.TrimLeft(raw[:length], "0")
+			n.value = raw[:length]
+			nextFieldOffset = length
+		} else {
+			l, lenOfLen, err := getFieldLength(raw, encoder, length, format)
+			if err != nil {
+				return 0, err
+			}
+			n.value =  raw[lenOfLen : (l+lenOfLen)]
+			nextFieldOffset = lenOfLen + l
+		}
+	}
+
+	err := validate(string(n.value), validator)
+	return nextFieldOffset, err
 }
 
 func (n *N) isEmpty() bool {
@@ -112,8 +132,26 @@ func (an *AN) Encode(encoder, length int, format, validator string) ([]byte, err
 	}
 }
 
-func (an *AN) Decode(raw []byte, encoder, length int) {
-	panic("implement me")
+func (an *AN) Decode(raw []byte, encoder, length int, format, validator string) (int, error) {
+	var nextFieldOffset int
+	switch encoder {
+	case BCDIC:
+	case ASCII:
+		if format == "" {
+			an.value = bytes.TrimRight(raw[:length], " ")
+			nextFieldOffset = length
+		} else {
+			l, lenOfLen, err := getFieldLength(raw, encoder, length, format)
+			if err != nil {
+				return 0, err
+			}
+			an.value = raw[lenOfLen : l+lenOfLen]
+			nextFieldOffset = lenOfLen + l
+		}
+	}
+
+	err := validate(string(an.value), validator)
+	return nextFieldOffset, err
 }
 
 func (an *AN) isEmpty() bool {
@@ -153,8 +191,15 @@ func (b *B) Encode(encoder, length int, format, validator string) ([]byte, error
 	}
 }
 
-func (b *B) Decode(raw []byte, encoder, length int) {
-	panic("implement me")
+func (b *B) Decode(raw []byte, encoder, length int, format, validator string) (int, error) {
+	switch encoder {
+	case BCDIC:
+	case ASCII:
+		b.value = raw[:length/4]
+		err := validate(string(b.value), validator)
+		return length / 4, err
+	}
+	return 0, nil
 }
 
 func (b *B) isEmpty() bool {
@@ -202,8 +247,21 @@ func (z *Z) Encode(encoder, length int, format, validator string) ([]byte, error
 	}
 }
 
-func (z *Z) Decode(raw []byte, encoder, length int) {
-	panic("implement me")
+func (z *Z) Decode(raw []byte, encoder, length int, format, validator string) (int, error) {
+	var nextFieldOffset int
+	switch encoder {
+	case BCDIC:
+	case ASCII:
+		l, lenOfLen, err := getFieldLength(raw, encoder, length, format)
+		if err != nil {
+			return 0, err
+		}
+		z.value = raw[lenOfLen : l+lenOfLen]
+		nextFieldOffset = lenOfLen + l
+	}
+
+	err := validate(string(z.value), validator)
+	return nextFieldOffset, err
 }
 func (z *Z) isEmpty() bool {
 	return len(z.value) == 0
@@ -250,8 +308,26 @@ func (anp *ANP) Encode(encoder, length int, format, validator string) ([]byte, e
 	}
 }
 
-func (anp *ANP) Decode(raw []byte, encoder, length int) {
-	panic("implement me")
+func (anp *ANP) Decode(raw []byte, encoder, length int, format, validator string) (int, error) {
+	var nextFieldOffset int
+	switch encoder {
+	case BCDIC:
+	case ASCII:
+		if format == "" {
+			anp.value = bytes.TrimRight(raw[:length], " ")
+			nextFieldOffset = length
+		} else {
+			l, lenOfLen, err := getFieldLength(raw, encoder, length, format)
+			if err != nil {
+				return 0, err
+			}
+			anp.value = raw[lenOfLen : l+lenOfLen]
+			nextFieldOffset = lenOfLen + l
+		}
+	}
+
+	err := validate(string(anp.value), validator)
+	return nextFieldOffset, err
 }
 
 func (anp *ANP) isEmpty() bool {
@@ -299,8 +375,26 @@ func (ans *ANS) Encode(encoder, length int, format, validator string) ([]byte, e
 	}
 }
 
-func (ans *ANS) Decode(raw []byte, encoder, length int) {
-	panic("implement me")
+func (ans *ANS) Decode(raw []byte, encoder, length int, format, validator string) (int, error) {
+	var nextFieldOffset int
+	switch encoder {
+	case BCDIC:
+	case ASCII:
+		if format == "" {
+			ans.value = bytes.TrimRight(raw[:length], " ")
+			nextFieldOffset = length
+		} else {
+			l, lenOfLen, err := getFieldLength(raw, encoder, length, format)
+			if err != nil {
+				return 0, err
+			}
+			ans.value = raw[lenOfLen : l+lenOfLen]
+			nextFieldOffset = lenOfLen + l
+		}
+	}
+
+	err := validate(string(ans.value), validator)
+	return nextFieldOffset, err
 }
 
 func (ans *ANS) isEmpty() bool {
@@ -335,6 +429,61 @@ func lengthIndicator(encoder, length int, format string) ([]byte, error) {
 		return []byte{}, nil
 	default:
 		return []byte{}, errors.New("invalid format")
+	}
+}
+
+func getFieldLength(raw []byte, encoder, maxLength int, format string) (length, lenOfLen int, err error) {
+	switch format {
+	case "LLVAR":
+		lenOfLen = 2
+		length, err = strconv.Atoi(string(raw[:2]))
+		if err != nil {
+			return length, lenOfLen, err
+		}
+		if length > maxLength {
+			return length, lenOfLen, errors.New("invalid length")
+		}
+		return length, lenOfLen, err
+	case "LLLVAR":
+		lenOfLen = 3
+		length, err := strconv.Atoi(string(raw[:3]))
+		if err != nil {
+			return length, lenOfLen, err
+
+		}
+		if length > maxLength {
+			return length, lenOfLen, errors.New("invalid length")
+		}
+		return length, lenOfLen, err
+
+	case "LLLLVAR":
+		lenOfLen = 4
+		length, err := strconv.Atoi(string(raw[4]))
+		if err != nil {
+			return length, lenOfLen, err
+		}
+		if length > maxLength {
+			return length, lenOfLen, errors.New("invalid length")
+		}
+		return length, lenOfLen, err
+
+	case "LLLLLVAR":
+		lenOfLen = 5
+		length, err := strconv.Atoi(string(raw[:5]))
+		if err != nil {
+			return length, lenOfLen, err
+		}
+		if length > maxLength {
+			return length, lenOfLen, errors.New("invalid length")
+		}
+		return length, lenOfLen, err
+
+	case "":
+		lenOfLen = 0
+		return length, lenOfLen, err
+
+	default:
+		return length, lenOfLen, errors.New("invalid format")
 	}
 }
 
