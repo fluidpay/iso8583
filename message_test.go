@@ -261,7 +261,7 @@ func TestPurchaseAuthorization(t *testing.T) {
 		DE7:   NewNumeric("0123205007"),       // Date And Time, Transmission
 		DE11:  NewNumeric("030402"),           // Systems Trace Audit Number
 		DE12:  NewNumeric("950123154952"),     // Date And Time, Local Transaction
-		DE32:  NewNumeric("10076401251"),    // Acquiring Institution Identification Code
+		DE32:  NewNumeric("10076401251"),      // Acquiring Institution Identification Code
 		DE39:  NewNumeric("000"),              // Action code
 		DE41:  NewANS("NJ020111"),             // Card Acceptor Terminal Identification
 		DE49:  NewNumeric("840"),              // Currency Code, Transaction
@@ -286,3 +286,141 @@ func TestPurchaseAuthorization(t *testing.T) {
 		t.Error("invalid encoding")
 	}
 }
+
+func TestReversalAdvice(t *testing.T) {
+	m := &Message{
+		DE2:   NewNumeric("000000000000000000"),                                     // Primary Account Number
+		DE3:   NewNumeric("092000"),                                                 // Processing Code
+		DE4:   NewNumeric("20000"),                                                  // Amount, Transaction
+		DE5:   NewNumeric("20000"),                                                  // Amount, Reconciliation
+		DE7:   NewNumeric("0123205206"),                                             // Date And Time, Transmission
+		DE11:  NewNumeric("075809"),                                                 // Systems Trace Audit Number
+		DE12:  NewNumeric("950123154952"),                                           // Date And Time, Local Transaction
+		DE18:  NewNumeric("5912"),                                                   // Merchant Type
+		DE22:  NewAlphanumeric("21010121314C"),                                      // Point of Service Data Code
+		DE24:  NewNumeric("400"),                                                    // Function Code
+		DE26:  NewNumeric("5912"),                                                   // Card Acceptor Business Code
+		DE28:  NewNumeric("950123"),                                                 // Date, Reconciliation
+		DE32:  NewNumeric("10076401251"),                                            // Acquiring Institution Identification Code
+		DE33:  NewNumeric("10111111118"),                                            // Forwarding Institution Identification Code
+		DE35:  NewTrack2Code("5421224887288158=99120010109"),                        // Track 2 Data
+		DE37:  NewANP("012401"),                                                     // Retrieval Reference Number
+		DE41:  NewANS("NJ020111"),                                                   // Card Acceptor Terminal Identification
+		DE42:  NewANS("73420"),                                                      // Card Acceptor Identification Code
+		DE43:  NewANS("NJ NEWARK          123 PINE STREET      USWRIGHT AID DRUGS"), // Card Acceptor Name/Location
+		DE46:  NewANS("000"),                                                        // Amounts, Fees
+		DE49:  NewNumeric("840"),                                                    // Currency Code, Transaction
+		DE54:  NewANS("2040840D0000000050002041840D000000015000"),                   // Amounts, Additional
+		DE56:  NewNumeric("12000304029501231549521110076401251"),                    // Original Data Elements
+		DE62:  NewNumeric("777001"),                                                 // Network Identifier
+		DE63:  NewNumeric("0123"),                                                   //  Network Settlement Date
+		DE100: NewNumeric("10222222226"),                                            // Receiving Institution Identification Code
+	}
+	m.encoder = ASCII
+	m.Mti = "1420"
+	b, err := m.Encode()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1) != "FA304551A8E485060000000010000000" {
+		t.Log("FA304551A8E485060000000010000000")
+		t.Log(bitmapHex(m.bitmapPrimary) + bitmapHex(m.DE1))
+		t.Error("invalid bitmap")
+	}
+	expected := "1420FA304551A8E485060000000010000000180000000000000000000920000000000200000000000200000123205206075809950123154952591221010121314C400591295012311100764012511110111111118285421224887288158=99120010109012401      NJ02011173420          58NJ NEWARK          123 PINE STREET      USWRIGHT AID DRUGS0030008400402040840D0000000050002041840D000000015000351200030402950123154952111007640125177700101231110222222226"
+	if expected != string(b) {
+		t.Log(expected)
+		t.Log(string(b))
+		t.Error("invalid encoding")
+	}
+}
+
+func TestReversalAdviceResponse(t *testing.T) {
+	m := &Message{
+		DE2:  NewNumeric("000000000000000000"), // Primary Account Number
+		DE3:  NewNumeric("092000"),             // Processing Code
+		DE4:  NewNumeric("20000"),              // Amount, Transaction
+		DE7:  NewNumeric("0123210209"),         // Date And Time, Transmission
+		DE11: NewNumeric("075809"),             // Systems Trace Audit Number
+		DE12: NewNumeric("950123210135"),       // Date And Time, Local Transaction
+		DE32: NewNumeric("10076401251"),        // Acquiring Institution Identification Code
+		DE33: NewNumeric("10222222226"),        // Forwarding Institution Identification Code
+		DE39: NewNumeric("400"),                // Action code
+	}
+	m.encoder = ASCII
+	m.Mti = "1430"
+	b, err := m.Encode()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bitmapHex(m.bitmapPrimary) != "7230000182000000" {
+		t.Log("FA304551A8E485060000000010000000")
+		t.Log(bitmapHex(m.bitmapPrimary))
+		t.Error("invalid bitmap")
+	}
+	expected := "1430723000018200000018000000000000000000092000000000020000012321020907580995012321013511100764012511110222222226400"
+	if expected != string(b) {
+		t.Log(expected)
+		t.Log(string(b))
+		t.Error("invalid encoding")
+	}
+}
+
+func TestNetworkManagementRequest(t *testing.T) {
+	m := &Message{
+		DE7:  NewNumeric("0124081908"),   // Date And Time, Transmission
+		DE11: NewNumeric("031972"),       // Systems Trace Audit Number
+		DE12: NewNumeric("950124081904"), // Date And Time, Local Transaction
+		DE24: NewNumeric("801"),          // Function Code
+		DE93: NewNumeric("00000000001"),  // Transaction Destination Institution Identification Code
+		DE94: NewNumeric("00000000002"),  // Transaction Originator Institution Identification Code
+	}
+	m.encoder = ASCII
+	m.Mti = "1804"
+	b, err := m.Encode()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1) != "82300100000000000000000C00000000" {
+		t.Log("82300100000000000000000C00000000")
+		t.Log(bitmapHex(m.bitmapPrimary) + bitmapHex(m.DE1))
+		t.Error("invalid bitmap")
+	}
+	expected := "180482300100000000000000000C00000000012408190803197295012408190480111000000000011100000000002"
+	if expected != string(b) {
+		t.Log(expected)
+		t.Log(string(b))
+		t.Error("invalid encoding")
+	}
+}
+
+func TestNetworkManagementRequestResponse(t *testing.T) {
+	m := &Message{
+		DE7:  NewNumeric("0124081920"),   // Date And Time, Transmission
+		DE11: NewNumeric("031972"),       // Systems Trace Audit Number
+		DE12: NewNumeric("950124081904"), // Date And Time, Local Transaction
+		DE24: NewNumeric("801"),          // Function Code
+		DE39: NewNumeric("800"),          // Action Code
+		DE93: NewNumeric("10222222226"),  // Transaction Destination Institution Identification Code
+		DE94: NewNumeric("10999999992"),  // Transaction Originator Institution Identification Code
+	}
+	m.encoder = ASCII
+	m.Mti = "1804"
+	b, err := m.Encode()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1) != "82300100020000000000000C00000000" {
+		t.Log("82300100020000000000000C00000000")
+		t.Log(bitmapHex(m.bitmapPrimary) + bitmapHex(m.DE1))
+		t.Error("invalid bitmap")
+	}
+	expected := "180482300100020000000000000C00000000012408192003197295012408190480180011102222222261110999999992"
+	if expected != string(b) {
+		t.Log(expected)
+		t.Log(string(b))
+		t.Error("invalid encoding")
+	}
+}
+
+
