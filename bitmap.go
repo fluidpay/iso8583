@@ -2,6 +2,7 @@ package iso8583
 
 import (
 	"fmt"
+	"strconv"
 )
 
 func addField(fields uint64, num uint8) uint64 {
@@ -18,4 +19,12 @@ func bitmapHex(fields uint64) string {
 	// %016X will convert the fields (uint64) to hexadecimal number
 	// with left padding to length of 16
 	return fmt.Sprintf("%016X", fields)
+}
+
+func decodeHexString(value string) (uint64, error) {
+	return strconv.ParseUint(value, 16, 64)
+}
+
+func isBitSet(fields uint64, num int8) bool {
+	return fields & (1 << (64 - num)) != 0
 }
