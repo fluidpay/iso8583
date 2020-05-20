@@ -74,7 +74,7 @@ func TestIsBitSet(t *testing.T) {
 			}
 		}
 
-		if !reflect.DeepEqual(scenario.bits,bits) {
+		if !reflect.DeepEqual(scenario.bits, bits) {
 			t.Errorf("bitmap should be %#v, instead of %#v", scenario.bits, bits)
 		}
 	}
