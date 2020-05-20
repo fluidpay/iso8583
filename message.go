@@ -240,3 +240,15 @@ func (m *Message) Decode(bytes []byte) error {
 	}
 	return nil
 }
+
+func (m *Message) PackedBitmap(packed bool) {
+	m.packedBitmap = packed
+}
+
+func (m *Message) PackedMessage(packed bool) {
+	m.packedMsg = packed
+}
+
+func (m *Message) SetEncoder(encoder int) {
+	m.encoder = encoder
+}
