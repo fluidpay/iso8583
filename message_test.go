@@ -165,19 +165,11 @@ func TestMessageDecode(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1) != "F230040102A000000000000004000000" {
-		t.Error("invalid bitmap")
-	}
-	//
-	//s,_ := json.MarshalIndent(m,"","\t")
-	//t.Log(string(s))
 
-
-
-	m1 := &Message{
+	expectedMsg := &Message{
 		DE2:   NewNumeric("4846811212"),        // Primary Account Number
 		DE3:   NewNumeric("201234"),            // Processing Code
-		DE4:   NewNumeric("10000000"),          // Amount, Transaction
+		DE4:   NewNumeric("000010000000"),      // Amount, Transaction
 		DE7:   NewNumeric("1107221800"),        // Date And Time, Transmission
 		DE11:  NewNumeric("000001"),            // Systems Trace Audit Number
 		DE12:  NewNumeric("161204171926"),      // Date And Time, Local Transaction
@@ -188,10 +180,17 @@ func TestMessageDecode(t *testing.T) {
 		DE43:  NewANS("Community1"),            // Card Acceptor Name/Location
 		DE102: NewANS("12341234234"),           // Account Identification 1
 	}
-	m1.Mti = "1200"
-	m1.encoder = ASCII
-	if !reflect.DeepEqual(m,m1) {
+	expectedMsg.Mti = "1200"
+	expectedMsg.encoder = ASCII
+	expectedMsg.Encode()
+
+	if bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1) != bitmapHex(expectedMsg.bitmapPrimary)+bitmapHex(expectedMsg.DE1) {
+		t.Log(bitmapHex(m.bitmapPrimary) + bitmapHex(m.DE1))
+		t.Log(bitmapHex(expectedMsg.bitmapPrimary) + bitmapHex(expectedMsg.DE1))
+		t.Error("invalid bitmap")
+	}
+	if !reflect.DeepEqual(m, expectedMsg) {
 		t.Error("not equal")
 	}
-}
 
+}
