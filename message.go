@@ -200,12 +200,12 @@ func (m *Message) Decode(bytes []byte) error {
 			return err
 		}
 		// if index < 64, search in primary bitmap if it is set
-		if index <= 64 && !isBitSet(m.bitmapPrimary, int8(index)) {
+		if index <= 64 && !isBitSet(m.bitmapPrimary, uint8(index)) {
 			continue
 		}
 
 		// if index > 64, search in secondary bitmap if it is set
-		if index > 64 && !isBitSet(m.DE1, int8(index-64)) {
+		if index > 64 && !isBitSet(m.DE1, uint8(index-64)) {
 			continue
 		}
 

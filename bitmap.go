@@ -25,6 +25,6 @@ func decodeHexString(value string) (uint64, error) {
 	return strconv.ParseUint(value, 16, 64)
 }
 
-func isBitSet(fields uint64, num int8) bool {
+func isBitSet(fields uint64, num uint8) bool {
 	return fields&(1<<(64-num)) != 0
 }
