@@ -157,3 +157,86 @@ func (m *Message) Encode() ([]byte, error) {
 	res = append(res, data...)
 	return res, nil
 }
+
+func (m *Message) Decode(bytes []byte) error {
+	var err error
+
+	// decode MTI
+
+	// it is an iterator, watching where we are currently in the iteration,
+	// which byte will be the starting position of the next decode
+	it := 4
+	m.Mti = string(bytes[:it])
+
+	// decode bitmaps
+	//decode primary bitmap
+	m.bitmapPrimary, err = decodeHexString(string(bytes[it : it+16]))
+	if err != nil {
+		return err
+	}
+	it += 16
+
+	// if first bit is 1, it means that we have secondary bitmap, decode secondary bitmap
+	if isBitSet(m.bitmapPrimary, 1) {
+		m.DE1, err = decodeHexString(string(bytes[it : it+16]))
+		if err != nil {
+			return err
+		}
+		it += 16
+	}
+
+	v := reflect.Indirect(reflect.ValueOf(m))
+	t := v.Type()
+	// iterate through iso fields, if bitmap is not empty at bit position i,
+	// set field with index i with proper value
+	for i := 0; i < v.NumField(); i++ {
+		if v.Field(i).Kind() != reflect.Ptr {
+			continue
+		}
+		sf := t.Field(i)
+		// get field index, e.g. for DE2 index=2
+		index, err := strconv.Atoi(strings.Trim(sf.Name, "DE"))
+		if err != nil {
+			return err
+		}
+		// if index < 64, search in primary bitmap if it is set
+		if index <= 64 && !isBitSet(m.bitmapPrimary, uint8(index)) {
+			continue
+		}
+
+		// if index > 64, search in secondary bitmap if it is set
+		if index > 64 && !isBitSet(m.DE1, uint8(index-64)) {
+			continue
+		}
+
+		// field (maximum) length
+		length, err := strconv.Atoi(sf.Tag.Get("length"))
+		if err != nil {
+			return err
+		}
+		// iso field format, "" means that field has fixed length, but
+		// e.g. LLVAR means that length indicator is encoded in the first 2 byte
+		// in this case length means "maximum length
+		format := sf.Tag.Get("format")
+		validator := sf.Tag.Get("validator")
+
+		// Decode field
+		structField := v.Field(i)
+
+		// skip if unexported
+		if !structField.CanSet() {
+			continue
+		}
+		// initialize field with empty struct
+		fieldTyp := reflect.New(structField.Type().Elem())
+		structField.Set(fieldTyp)
+
+		f := v.Field(i).Interface().(field)
+		nextFieldOffset, err := f.Decode(bytes[it:], m.encoder, length, format, validator)
+		if err != nil {
+			return err
+		}
+		it += nextFieldOffset
+	}
+	return nil
+}

@@ -6,7 +6,7 @@ const (
 	binaryRegexString       = "^[0-1]{64}|[0-9A-F]{16}|[0-9A-F]{8}$"
 	numberRegexString       = "^[0-9]+$"
 	alphaNumericRegexString = "^[a-zA-Z0-9]+$"
-	anpRegexString          = "^[a-zA-Z0-9]+\\s*$"
+	anpRegexString          = "^[a-zA-Z0-9]*\\s*$"
 	ansRegexString          = "^[ -~]*$"
 	yymmddhhmmssRegexString = "^([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])([0-1][0-9]|2[0-3])([0-5][0-9]){2}$"
 	mmddhhmmssRegexString   = "^(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])([0-1][0-9]|2[0-3])([0-5][0-9]){2}$"
