@@ -249,6 +249,6 @@ func (m *Message) PackedMessage(packed bool) {
 	m.packedMsg = packed
 }
 
-func (m *Message) setEncoder(encoder int) {
+func (m *Message) SetEncoder(encoder int) {
 	m.encoder = encoder
 }
