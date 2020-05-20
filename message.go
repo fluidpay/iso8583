@@ -162,6 +162,9 @@ func (m *Message) Decode(bytes []byte) error {
 	var err error
 
 	// decode MTI
+
+	// it is an iterator, watching where we are currently in the iteration,
+	// which byte will be the starting position of the next decode
 	it := 4
 	m.Mti = string(bytes[:it])
 
@@ -184,8 +187,8 @@ func (m *Message) Decode(bytes []byte) error {
 
 	v := reflect.Indirect(reflect.ValueOf(m))
 	t := v.Type()
-	// iterate through iso fields, if field is not empty,
-	// encode and append it to data, and set the proper bit in bitmap
+	// iterate through iso fields, if bitmap is not empty at bit position i,
+	// set field with index i with proper value
 	for i := 0; i < v.NumField(); i++ {
 		if v.Field(i).Kind() != reflect.Ptr {
 			continue
@@ -196,15 +199,17 @@ func (m *Message) Decode(bytes []byte) error {
 		if err != nil {
 			return err
 		}
+		// if index < 64, search in primary bitmap if it is set
 		if index <= 64 && !isBitSet(m.bitmapPrimary, int8(index)) {
 			continue
 		}
 
+		// if index > 64, search in secondary bitmap if it is set
 		if index > 64 && !isBitSet(m.DE1, int8(index-64)) {
 			continue
 		}
 
-		// field length
+		// field (maximum) length
 		length, err := strconv.Atoi(sf.Tag.Get("length"))
 		if err != nil {
 			return err
@@ -222,6 +227,7 @@ func (m *Message) Decode(bytes []byte) error {
 		if !structField.CanSet() {
 			continue
 		}
+		// initialize field with empty struct
 		fieldTyp := reflect.New(structField.Type().Elem())
 		structField.Set(fieldTyp)
 
