@@ -26,5 +26,5 @@ func decodeHexString(value string) (uint64, error) {
 }
 
 func isBitSet(fields uint64, num int8) bool {
-	return fields & (1 << (64 - num)) != 0
+	return fields&(1<<(64-num)) != 0
 }

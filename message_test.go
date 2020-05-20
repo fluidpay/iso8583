@@ -232,7 +232,7 @@ func TestPurchaseWithCashBackPartialApprovalToAquirer(t *testing.T) {
 	the following message contains a Purchase with Cash Back Response Message where the issuer is
 	responding to EPOC. The customer attempted to buy $150.00 worth of goods with $50.00
 	cash-back and is approved for the purchase amount only, $150.00.
- */
+*/
 
 func TestPurchaseWithCashBackPartialApprovalFromIssuer(t *testing.T) {
 	m := &Message{
@@ -287,7 +287,7 @@ func TestPurchaseWithCashBackPartialApprovalFromIssuer(t *testing.T) {
 	the following message contains an example of a Purchase Authorization message where the processor
 	is the source of the message. This is an approval message that returns the checking account
 	number but does not return account balances.
- */
+*/
 
 func TestPurchaseAuthorization(t *testing.T) {
 	m := &Message{
@@ -322,10 +322,11 @@ func TestPurchaseAuthorization(t *testing.T) {
 		t.Error("invalid encoding")
 	}
 }
+
 /*
 	the following message contains an example of a Reversal Advice message where EPOC is the source
 	of the message. In this message the customer canceled the transaction resulting in a full reversal.
- */
+*/
 
 func TestReversalAdvice(t *testing.T) {
 	m := &Message{
@@ -378,7 +379,7 @@ func TestReversalAdvice(t *testing.T) {
 /*
 	the following message contains an example of a Reversal Advice Response Message where the
 	processor is the source of the message.
- */
+*/
 
 func TestReversalAdviceResponse(t *testing.T) {
 	m := &Message{
@@ -414,7 +415,7 @@ func TestReversalAdviceResponse(t *testing.T) {
 /*
 	The following message contains an example of a Network Management Request message, initiated by
 	EPOC (sign-on).
- */
+*/
 
 func TestNetworkManagementRequest(t *testing.T) {
 	m := &Message{
@@ -447,7 +448,7 @@ func TestNetworkManagementRequest(t *testing.T) {
 /*
 	the following message contains an example of a Network Management Request Response Message,
 	initiated by the processor (sign-on accepted).
- */
+*/
 
 func TestNetworkManagementRequestResponse(t *testing.T) {
 	m := &Message{

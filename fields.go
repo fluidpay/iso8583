@@ -78,7 +78,7 @@ func (n *N) Decode(raw []byte, encoder, length int, format, validator string) (i
 			if err != nil {
 				return 0, err
 			}
-			n.value =  raw[lenOfLen : (l+lenOfLen)]
+			n.value = raw[lenOfLen:(l + lenOfLen)]
 			nextFieldOffset = lenOfLen + l
 		}
 	}
