@@ -116,13 +116,13 @@ func TestNDecode(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(string(n.value))
+	t.Log(string(n.Value))
 
 	b = []byte("0000012356")
 	nn, err := n.Decode(b, ASCII, 10, "", "")
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(string(n.value))
+	t.Log(string(n.Value))
 	t.Log(nn)
 }

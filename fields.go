@@ -23,15 +23,15 @@ type field interface {
 }
 
 type N struct {
-	value []byte
+	Value []byte
 }
 
 func NewNumeric(value string) *N {
-	return &N{value: []byte(value)}
+	return &N{Value: []byte(value)}
 }
 
 func (n *N) Encode(encoder, length int, format, validator string) ([]byte, error) {
-	val := n.value
+	val := n.Value
 	if err := validate(string(val), validator); err != nil {
 		return []byte{}, err
 	}
@@ -71,36 +71,36 @@ func (n *N) Decode(raw []byte, encoder, length int, format, validator string) (i
 	case ASCII:
 		if format == "" {
 			//n.value = bytes.TrimLeft(raw[:length], "0")
-			n.value = raw[:length]
+			n.Value = raw[:length]
 			nextFieldOffset = length
 		} else {
 			l, lenOfLen, err := getFieldLength(raw, encoder, length, format)
 			if err != nil {
 				return 0, err
 			}
-			n.value = raw[lenOfLen:(l + lenOfLen)]
+			n.Value = raw[lenOfLen:(l + lenOfLen)]
 			nextFieldOffset = lenOfLen + l
 		}
 	}
 
-	err := validate(string(n.value), validator)
+	err := validate(string(n.Value), validator)
 	return nextFieldOffset, err
 }
 
 func (n *N) isEmpty() bool {
-	return len(n.value) == 0
+	return len(n.Value) == 0
 }
 
 type AN struct {
-	value []byte
+	Value []byte
 }
 
 func NewAlphanumeric(value string) *AN {
-	return &AN{value: []byte(value)}
+	return &AN{Value: []byte(value)}
 }
 
 func (an *AN) Encode(encoder, length int, format, validator string) ([]byte, error) {
-	val := an.value
+	val := an.Value
 	if err := validate(string(val), validator); err != nil {
 		return []byte{}, err
 	}
@@ -138,28 +138,28 @@ func (an *AN) Decode(raw []byte, encoder, length int, format, validator string) 
 	case BCDIC:
 	case ASCII:
 		if format == "" {
-			an.value = bytes.TrimRight(raw[:length], " ")
+			an.Value = bytes.TrimRight(raw[:length], " ")
 			nextFieldOffset = length
 		} else {
 			l, lenOfLen, err := getFieldLength(raw, encoder, length, format)
 			if err != nil {
 				return 0, err
 			}
-			an.value = raw[lenOfLen : l+lenOfLen]
+			an.Value = raw[lenOfLen : l+lenOfLen]
 			nextFieldOffset = lenOfLen + l
 		}
 	}
 
-	err := validate(string(an.value), validator)
+	err := validate(string(an.Value), validator)
 	return nextFieldOffset, err
 }
 
 func (an *AN) isEmpty() bool {
-	return len(an.value) == 0
+	return len(an.Value) == 0
 }
 
 type B struct {
-	value []byte
+	Value []byte
 }
 
 // New Binary converts 64bit binary to Hexadecimal form, each 4 bits to 1 hexadecimal character
@@ -178,7 +178,7 @@ func NewBinaryHex(value string) *B {
 }
 
 func (b *B) Encode(encoder, length int, format, validator string) ([]byte, error) {
-	val := b.value
+	val := b.Value
 	if err := validate(string(val), validator); err != nil {
 		return []byte{}, err
 	}
@@ -195,19 +195,19 @@ func (b *B) Decode(raw []byte, encoder, length int, format, validator string) (i
 	switch encoder {
 	case BCDIC:
 	case ASCII:
-		b.value = raw[:length/4]
-		err := validate(string(b.value), validator)
+		b.Value = raw[:length/4]
+		err := validate(string(b.Value), validator)
 		return length / 4, err
 	}
 	return 0, nil
 }
 
 func (b *B) isEmpty() bool {
-	return len(b.value) == 0
+	return len(b.Value) == 0
 }
 
 type Z struct {
-	value []byte
+	Value []byte
 }
 
 func NewTrack2Code(value string) *Z {
@@ -215,7 +215,7 @@ func NewTrack2Code(value string) *Z {
 }
 
 func (z *Z) Encode(encoder, length int, format, validator string) ([]byte, error) {
-	val := z.value
+	val := z.Value
 	if err := validate(string(val), validator); err != nil {
 		return []byte{}, err
 	}
@@ -256,19 +256,19 @@ func (z *Z) Decode(raw []byte, encoder, length int, format, validator string) (i
 		if err != nil {
 			return 0, err
 		}
-		z.value = raw[lenOfLen : l+lenOfLen]
+		z.Value = raw[lenOfLen : l+lenOfLen]
 		nextFieldOffset = lenOfLen + l
 	}
 
-	err := validate(string(z.value), validator)
+	err := validate(string(z.Value), validator)
 	return nextFieldOffset, err
 }
 func (z *Z) isEmpty() bool {
-	return len(z.value) == 0
+	return len(z.Value) == 0
 }
 
 type ANP struct {
-	value []byte
+	Value []byte
 }
 
 func NewANP(value string) *ANP {
@@ -276,7 +276,7 @@ func NewANP(value string) *ANP {
 }
 
 func (anp *ANP) Encode(encoder, length int, format, validator string) ([]byte, error) {
-	val := anp.value
+	val := anp.Value
 	if err := validate(string(val), validator); err != nil {
 		return []byte{}, err
 	}
@@ -314,28 +314,28 @@ func (anp *ANP) Decode(raw []byte, encoder, length int, format, validator string
 	case BCDIC:
 	case ASCII:
 		if format == "" {
-			anp.value = bytes.TrimRight(raw[:length], " ")
+			anp.Value = bytes.TrimRight(raw[:length], " ")
 			nextFieldOffset = length
 		} else {
 			l, lenOfLen, err := getFieldLength(raw, encoder, length, format)
 			if err != nil {
 				return 0, err
 			}
-			anp.value = raw[lenOfLen : l+lenOfLen]
+			anp.Value = raw[lenOfLen : l+lenOfLen]
 			nextFieldOffset = lenOfLen + l
 		}
 	}
 
-	err := validate(string(anp.value), validator)
+	err := validate(string(anp.Value), validator)
 	return nextFieldOffset, err
 }
 
 func (anp *ANP) isEmpty() bool {
-	return len(anp.value) == 0
+	return len(anp.Value) == 0
 }
 
 type ANS struct {
-	value []byte
+	Value []byte
 }
 
 func NewANS(value string) *ANS {
@@ -343,7 +343,7 @@ func NewANS(value string) *ANS {
 }
 
 func (ans *ANS) Encode(encoder, length int, format, validator string) ([]byte, error) {
-	val := ans.value
+	val := ans.Value
 	if err := validate(string(val), validator); err != nil {
 		return []byte{}, err
 	}
@@ -381,24 +381,24 @@ func (ans *ANS) Decode(raw []byte, encoder, length int, format, validator string
 	case BCDIC:
 	case ASCII:
 		if format == "" {
-			ans.value = bytes.TrimRight(raw[:length], " ")
+			ans.Value = bytes.TrimRight(raw[:length], " ")
 			nextFieldOffset = length
 		} else {
 			l, lenOfLen, err := getFieldLength(raw, encoder, length, format)
 			if err != nil {
 				return 0, err
 			}
-			ans.value = raw[lenOfLen : l+lenOfLen]
+			ans.Value = raw[lenOfLen : l+lenOfLen]
 			nextFieldOffset = lenOfLen + l
 		}
 	}
 
-	err := validate(string(ans.value), validator)
+	err := validate(string(ans.Value), validator)
 	return nextFieldOffset, err
 }
 
 func (ans *ANS) isEmpty() bool {
-	return len(ans.value) == 0
+	return len(ans.Value) == 0
 }
 
 func lengthIndicator(encoder, length int, format string) ([]byte, error) {
