@@ -174,6 +174,8 @@ func NewBinaryUint64(bin uint64) *B {
 	return &B{[]byte(bitmapHex(bin))}
 }
 
+// NewBinaryHex
+// note: use this if value is in hexadecimal form
 func NewBinaryHex(value string) *B {
 	return &B{[]byte(value)}
 }
