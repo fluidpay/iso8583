@@ -114,16 +114,6 @@ type SubMessage struct {
 func (m *SubMessage) Encode() ([]byte, error) {
 	res := make([]byte, 0)
 
-	// append mti
-	//if len(m.Mti) != 4 {
-	//	return []byte{}, errors.New("invalid MTI length")
-	//}
-	switch m.encoder {
-	case BCDIC:
-	case ASCII:
-		//res = append(res, []byte()...)
-	}
-
 	// initialize bitmaps
 	var bitmapPrimary uint64
 	var bitmapSecondary uint64
@@ -177,10 +167,10 @@ func (m *SubMessage) Encode() ([]byte, error) {
 	m.bitmapPrimary = bitmapPrimary
 	res = append(res, []byte(bitmapHex(bitmapPrimary))...)
 
-	//if bitmapSecondary != 0 {
-	//	m.DE1 = bitmapSecondary
-	//	res = append(res, []byte(bitmapHex(bitmapSecondary))...)
-	//}
+	if bitmapSecondary != 0 {
+		m.SE1 = bitmapSecondary
+		res = append(res, []byte(bitmapHex(bitmapSecondary))...)
+	}
 
 	// append iso data elements to result
 	res = append(res, data...)

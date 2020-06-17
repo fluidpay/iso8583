@@ -146,7 +146,8 @@ func (m *Message) Encode() ([]byte, error) {
 				data = append(data, d...)
 				continue
 			} else {
-				continue
+				// TODO
+				//continue
 			}
 		}
 

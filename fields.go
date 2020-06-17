@@ -2,6 +2,7 @@ package iso8583
 
 import (
 	"bytes"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"strconv"
@@ -175,6 +176,12 @@ func NewBinaryUint64(bin uint64) *B {
 
 func NewBinaryHex(value string) *B {
 	return &B{[]byte(value)}
+}
+
+// New Binary converts binary byte slice to Hexadecimal form, each 4 bits to 1 hexadecimal character,
+// required because if len(bin) > 64 we can't use string form
+func NewBinaryBytes(bin []byte) *B {
+	return &B{[]byte(hex.EncodeToString(bin))}
 }
 
 func (b *B) Encode(encoder, length int, format, validator string) ([]byte, error) {
