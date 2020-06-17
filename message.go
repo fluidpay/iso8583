@@ -76,7 +76,7 @@ type Message struct {
 	DE111 *ANS   `format:"LLLLVAR" length:"9999" validator:"ANS"`
 	DE123 *ANS   `format:"LLLVAR" length:"999" validator:"ANS"`
 	DE124 *ANS   `format:"LLLVAR" length:"999" validator:"ANS"`
-	DE125 *ANS   `format:"LLLVAR" length:"999" validator:"ANS"`
+	DE125 *SubMessage   `format:"LLLVAR" length:"999" validator:"ANS"`
 	DE126 *ANS   `format:"LLLVAR" length:"999" validator:"ANS"`
 	DE127 *ANS   `format:"LLLLVAR" length:"9999" validator:"ANS"`
 	DE128 *ANS   `format:"LLLLLVAR" length:"99999" validator:"ANS"`
@@ -126,14 +126,28 @@ func (m *Message) Encode() ([]byte, error) {
 		format := sf.Tag.Get("format")
 		validator := sf.Tag.Get("validator")
 
-		f := v.Field(i).Interface().(field)
-
 		if index <= 64 {
 			bitmapPrimary = addField(bitmapPrimary, uint8(index))
 		} else {
 			// if we need secondary bitmap, set first bit in primary bitmap
 			bitmapPrimary |= 1 << 63
 			bitmapSecondary = addField(bitmapSecondary, uint8(index-64))
+		}
+
+		// tweak of submessage
+		f, ok := v.Field(i).Interface().(field)
+		if !ok {
+			if sm, ok := v.Field(i).Interface().(*SubMessage); ok {
+				res, err := sm.Encode()
+				if err != nil {
+					return nil, err
+				}
+				d, err := NewANS(string(res)).Encode(m.encoder, length, format, validator)
+				data = append(data, d...)
+				continue
+			} else {
+				continue
+			}
 		}
 
 		// encode field, append it to data
@@ -231,8 +245,23 @@ func (m *Message) Decode(bytes []byte) error {
 		fieldTyp := reflect.New(structField.Type().Elem())
 		structField.Set(fieldTyp)
 
-		f := v.Field(i).Interface().(field)
-		nextFieldOffset, err := f.Decode(bytes[it:], m.encoder, length, format, validator)
+		var nextFieldOffset int
+		f, ok := v.Field(i).Interface().(field)
+		if !ok {
+			if sm, ok := v.Field(i).Interface().(*SubMessage); ok {
+				ans := NewANS("")
+				nextFieldOffset, err = ans.Decode(bytes[it:], m.encoder, length, format, validator)
+				err = sm.Decode(ans.Value)
+				if err != nil {
+					return err
+				}
+				continue
+				//v.Field(i).Set(reflect.ValueOf(sm))
+			} else {
+				continue
+			}
+		}
+		nextFieldOffset, err = f.Decode(bytes[it:], m.encoder, length, format, validator)
 		if err != nil {
 			return err
 		}
