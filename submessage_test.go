@@ -116,3 +116,49 @@ func TestMessageWithSubMessageDecode(t *testing.T) {
 		t.Errorf("SE2 value should be %s, instead of %s", string(expectedMsg.DE125.SE2.Value), string(m.DE125.SE2.Value))
 	}
 }
+
+func TestMessageWithSubMessageEncodeWithExtendedBitmap(t *testing.T) {
+	m := &Message{
+		DE2: NewNumeric("4846811212"), // Primary Account Number
+		DE125: &SubMessage{
+			SE2:  NewANS("Test Address"),     // AVS Cardholder Address
+			SE3:  NewANS("12345"),            // AVS Additional Response Data
+			SE4:  NewNumeric("9876543210"),   // Shared Branch National Point of Service Condition Code
+			SE7:  NewANS("123"),              // Interchange Fee Indicator
+			SE8:  NewANS("A"),                // Market–Specific Indicator
+			SE9:  NewAlphanumeric("123"),     // Transaction Type Indicator
+			SE11: NewAlphanumeric("1"),       // International Service Assessment (ISA) Indicator
+			SE15: NewANS("12"),               // Multiple Clearing Sequence Number
+			SE16: NewANS("12"),               // Multiple Clearing Sequence Count
+			SE18: NewANS("1111111100000000"), // Shazam Transaction ID
+			SE20: NewANS("12"),               // Business Application Identifier (BAI)
+			SE98: NewAlphanumeric("1"),       // Authorization Type
+		},
+	}
+
+	m.Mti = "1200"
+	m.encoder = ASCII
+	b, err := m.Encode()
+	if err != nil {
+		t.Fatal(err)
+	}
+	hexExpected := "C0000000000000000000000000000008"
+	if bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1) != hexExpected {
+		t.Errorf("bitmapHex should be %s, instead of %s", hexExpected, bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1))
+	}
+	subMessagehexExpected := "F3A35000000000000000000040000000"
+	if bitmapHex(m.DE125.bitmapPrimary) + bitmapHex(m.DE125.SE1) != subMessagehexExpected {
+		t.Errorf("bitmapHex should be %s, instead of %s", subMessagehexExpected, bitmapHex(m.DE125.bitmapPrimary) + bitmapHex(m.DE125.SE1))
+	}
+
+	expected := "1200C0000000000000000000000000000008104846811212107F3A35000000000000000000040000000Test Address                 123459876543210123A123112121111111100000000121"
+	if string(b) != expected {
+		t.Errorf("Encoded should be %s, instead of %s", expected, string(b))
+	}
+
+	sm,_ := m.DE125.Encode()
+	expectedSubmessage := "F3A35000000000000000000040000000Test Address                 123459876543210123A123112121111111100000000121"
+	if string(sm) != expectedSubmessage {
+		t.Errorf("Encoded should be %s, instead of %s", expectedSubmessage, string(sm))
+	}
+}
