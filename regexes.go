@@ -3,7 +3,8 @@ package iso8583
 import "regexp"
 
 const (
-	binaryRegexString       = "^[0-1]{64}|[0-9A-F]{16}|[0-9A-F]{8}$"
+	binary64RegexString     = "^[0-1]{64}|[0-9A-F]{16}|[0-9A-F]{8}$"
+	binaryRegexString       = "^[0-9A-F]+$"
 	numberRegexString       = "^[0-9]+$"
 	alphaNumericRegexString = "^[a-zA-Z0-9]+$"
 	anpRegexString          = "^[a-zA-Z0-9]*\\s*$"
@@ -17,6 +18,7 @@ const (
 )
 
 var (
+	binary64Regex     = regexp.MustCompile(binary64RegexString)
 	binaryRegex       = regexp.MustCompile(binaryRegexString)
 	numberRegex       = regexp.MustCompile(numberRegexString)
 	alphaNumericRegex = regexp.MustCompile(alphaNumericRegexString)
