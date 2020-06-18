@@ -151,14 +151,57 @@ func TestMessageWithSubMessageEncodeWithExtendedBitmap(t *testing.T) {
 		t.Errorf("bitmapHex should be %s, instead of %s", subMessagehexExpected, bitmapHex(m.DE125.bitmapPrimary) + bitmapHex(m.DE125.SE1))
 	}
 
-	expected := "1200C0000000000000000000000000000008104846811212107F3A35000000000000000000040000000Test Address                 123459876543210123A123112121111111100000000121"
-	if string(b) != expected {
-		t.Errorf("Encoded should be %s, instead of %s", expected, string(b))
+	expectedMsg := "1200C0000000000000000000000000000008104846811212107F3A35000000000000000000040000000Test Address                 123459876543210123A123112121111111100000000121"
+	if string(b) != expectedMsg {
+		t.Errorf("Encoded should be %s, instead of %s", expectedMsg, string(b))
 	}
 
 	sm,_ := m.DE125.Encode()
 	expectedSubmessage := "F3A35000000000000000000040000000Test Address                 123459876543210123A123112121111111100000000121"
 	if string(sm) != expectedSubmessage {
 		t.Errorf("Encoded should be %s, instead of %s", expectedSubmessage, string(sm))
+	}
+}
+
+func TestMessageWithSubMessageDecodeWithExtendedBitmap(t *testing.T) {
+	msgToDecode := "1200C0000000000000000000000000000008104846811212107F3A35000000000000000000040000000Test Address                 123459876543210123A123112121111111100000000121"
+	m := &Message{}
+	m.encoder = ASCII
+	err := m.Decode([]byte(msgToDecode))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	expectedMsg := &Message{
+		DE2: NewNumeric("4846811212"), // Primary Account Number
+		DE125: &SubMessage{
+			SE2:  NewANS("Test Address"),     // AVS Cardholder Address
+			SE3:  NewANS("12345"),            // AVS Additional Response Data
+			SE4:  NewNumeric("9876543210"),   // Shared Branch National Point of Service Condition Code
+			SE7:  NewANS("123"),              // Interchange Fee Indicator
+			SE8:  NewANS("A"),                // Market–Specific Indicator
+			SE9:  NewAlphanumeric("123"),     // Transaction Type Indicator
+			SE11: NewAlphanumeric("1"),       // International Service Assessment (ISA) Indicator
+			SE15: NewANS("12"),               // Multiple Clearing Sequence Number
+			SE16: NewANS("12"),               // Multiple Clearing Sequence Count
+			SE18: NewANS("1111111100000000"), // Shazam Transaction ID
+			SE20: NewANS("12"),               // Business Application Identifier (BAI)
+			SE98: NewAlphanumeric("1"),       // Authorization Type
+		},
+	}
+	expectedMsg.Mti = "1200"
+	expectedMsg.encoder = ASCII
+	expectedMsg.Encode()
+
+	if bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1) != bitmapHex(expectedMsg.bitmapPrimary)+bitmapHex(expectedMsg.DE1) {
+		t.Log(bitmapHex(m.bitmapPrimary) + bitmapHex(m.DE1))
+		t.Log(bitmapHex(expectedMsg.bitmapPrimary) + bitmapHex(expectedMsg.DE1))
+		t.Error("invalid bitmap")
+	}
+	if string(m.DE125.SE2.Value) != string(expectedMsg.DE125.SE2.Value) {
+		t.Errorf("SE2 value should be %s, instead of %s", string(expectedMsg.DE125.SE2.Value), string(m.DE125.SE2.Value))
+	}
+	if !reflect.DeepEqual(m, expectedMsg) {
+		t.Error("not equal")
 	}
 }
