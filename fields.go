@@ -476,6 +476,10 @@ func (r *Reserved) Decode(raw []byte, encoder, length int, format, validator str
 	return 0, errors.New("reserved field not allowed")
 }
 
+func (r *Reserved) isEmpty() bool {
+	return true
+}
+
 func lengthIndicator(encoder, length int, format string) ([]byte, error) {
 	switch format {
 	case "LLVAR":
