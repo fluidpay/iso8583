@@ -205,3 +205,74 @@ func TestMessageWithSubMessageDecodeWithExtendedBitmap(t *testing.T) {
 		t.Error("not equal")
 	}
 }
+
+func TestSubMessageEncodeBinaries(t *testing.T) {
+	m := &Message{
+		DE52: NewBinary64Uint64(1 << 5), // Personal Identification Number Data
+		DE125: &SubMessage{
+			SE41: NewBN("A5B432"),     // Accel 3D Secure Authentication Value
+			SE85: NewBN("ABCABC1001"), // EMV Data
+		},
+	}
+
+	m.Mti = "1200"
+	m.encoder = ASCII
+	b, err := m.Encode()
+	if err != nil {
+		t.Fatal(err)
+	}
+	hexExpected := "80000000000010000000000000000008"
+	if bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1) != hexExpected {
+		t.Errorf("bitmapHex should be %s, instead of %s", hexExpected, bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1))
+	}
+
+	subMessageHexExpected := "80000000008000000000080000000000"
+	if bitmapHex(m.DE125.bitmapPrimary)+bitmapHex(m.DE125.SE1) != subMessageHexExpected {
+		t.Errorf("bitmapHex should be %s, instead of %s", subMessageHexExpected, bitmapHex(m.DE125.bitmapPrimary)+bitmapHex(m.DE125.SE1))
+	}
+
+	expectedMsg := "120080000000000010000000000000000008000000000000002005480000000008000000000080000000000006A5B432010ABCABC1001"
+	if string(b) != expectedMsg {
+		t.Errorf("Encoded should be %s, instead of %s", expectedMsg, string(b))
+	}
+
+	sm, _ := m.DE125.Encode()
+	expectedSubmessage := "80000000008000000000080000000000006A5B432010ABCABC1001"
+	if string(sm) != expectedSubmessage {
+		t.Errorf("Encoded should be %s, instead of %s", expectedSubmessage, string(sm))
+	}
+}
+
+func TestMessageDecodeBinaries(t *testing.T) {
+	msgToDecode := "120080000000000010000000000000000008000000000000002005480000000008000000000080000000000006A5B432010ABCABC1001"
+	m := &Message{}
+	m.encoder = ASCII
+	err := m.Decode([]byte(msgToDecode))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	expectedMsg := &Message{
+		DE52: NewBinary64Uint64(1 << 5), // Personal Identification Number Data
+		DE125: &SubMessage{
+			SE41: NewBN("A5B432"),     // Accel 3D Secure Authentication Value
+			SE85: NewBN("ABCABC1001"), // EMV Data
+		},
+	}
+
+	expectedMsg.Mti = "1200"
+	expectedMsg.encoder = ASCII
+	expectedMsg.Encode()
+
+	if bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1) != bitmapHex(expectedMsg.bitmapPrimary)+bitmapHex(expectedMsg.DE1) {
+		t.Log(bitmapHex(m.bitmapPrimary) + bitmapHex(m.DE1))
+		t.Log(bitmapHex(expectedMsg.bitmapPrimary) + bitmapHex(expectedMsg.DE1))
+		t.Error("invalid bitmap")
+	}
+	if !reflect.DeepEqual(m, expectedMsg) {
+		t.Error("not equal")
+	}
+}
+
+
+
