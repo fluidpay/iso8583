@@ -2,7 +2,6 @@ package iso8583
 
 import (
 	"bytes"
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"strconv"
@@ -159,34 +158,28 @@ func (an *AN) isEmpty() bool {
 	return len(an.Value) == 0
 }
 
-type B struct {
+type B64 struct {
 	Value []byte
 }
 
 // New Binary converts 64bit binary to Hexadecimal form, each 4 bits to 1 hexadecimal character
-func NewBinary(value string) *B {
+func NewBinary64(value string) *B64 {
 	b, _ := strconv.ParseUint(value, 10, 64)
-	return &B{[]byte(bitmapHex(b))}
+	return &B64{[]byte(bitmapHex(b))}
 }
 
 // New Binary converts 64bit binary to Hexadecimal form, each 4 bits to 1 hexadecimal character
-func NewBinaryUint64(bin uint64) *B {
-	return &B{[]byte(bitmapHex(bin))}
+func NewBinary64Uint64(bin uint64) *B64 {
+	return &B64{[]byte(bitmapHex(bin))}
 }
 
-// NewBinaryHex
+// NewBinary64Hex
 // note: use this if value is in hexadecimal form
-func NewBinaryHex(value string) *B {
-	return &B{[]byte(value)}
+func NewBinary64Hex(value string) *B64 {
+	return &B64{[]byte(value)}
 }
 
-// New Binary converts binary byte slice to Hexadecimal form, each 4 bits to 1 hexadecimal character,
-// required because if len(bin) > 64 we can't use string form
-func NewBinaryBytes(bin []byte) *B {
-	return &B{[]byte(hex.EncodeToString(bin))}
-}
-
-func (b *B) Encode(encoder, length int, format, validator string) ([]byte, error) {
+func (b *B64) Encode(encoder, length int, format, validator string) ([]byte, error) {
 	val := b.Value
 	if err := validate(string(val), validator); err != nil {
 		return []byte{}, err
@@ -200,7 +193,7 @@ func (b *B) Encode(encoder, length int, format, validator string) ([]byte, error
 	}
 }
 
-func (b *B) Decode(raw []byte, encoder, length int, format, validator string) (int, error) {
+func (b *B64) Decode(raw []byte, encoder, length int, format, validator string) (int, error) {
 	switch encoder {
 	case BCDIC:
 	case ASCII:
@@ -211,7 +204,68 @@ func (b *B) Decode(raw []byte, encoder, length int, format, validator string) (i
 	return 0, nil
 }
 
-func (b *B) isEmpty() bool {
+func (b *B64) isEmpty() bool {
+	return len(b.Value) == 0
+}
+
+type BN struct {
+	Value []byte
+}
+
+//// New Binary creates a variable length binary represented in hexadecimal format
+func NewBN(hex string) *BN {
+	return &BN{[]byte(hex)}
+}
+
+func (b *BN) Encode(encoder, length int, format, validator string) ([]byte, error) {
+	val := b.Value
+	if err := validate(string(val), validator); err != nil {
+		return []byte{}, err
+	}
+	// if field has fixed length, add right padding with ' ', else
+	// add length prefix in specific format
+	if format == "" {
+		return []byte{}, errors.New("BN has variable length")
+	} else {
+		if len(val) > length {
+			return nil, errors.New("invalid value length")
+		}
+		lInd, err := lengthIndicator(encoder, len(val), format)
+		if err != nil {
+			return nil, err
+		}
+		val = append(lInd, val...)
+	}
+
+	switch encoder {
+	case BCDIC:
+		panic("implement me")
+	default: //ASCII encoding
+		return val, nil
+	}
+}
+
+func (b *BN) Decode(raw []byte, encoder, length int, format, validator string) (int, error) {
+	var nextFieldOffset int
+	switch encoder {
+	case BCDIC:
+	case ASCII:
+		if format == "" {
+			return 0, errors.New("BN has variable length")
+		} else {
+			l, lenOfLen, err := getFieldLength(raw, encoder, length, format)
+			if err != nil {
+				return 0, err
+			}
+			b.Value = raw[lenOfLen : l+lenOfLen]
+			nextFieldOffset = lenOfLen + l
+		}
+	}
+	err := validate(string(b.Value), validator)
+	return nextFieldOffset, err
+}
+
+func (b *BN) isEmpty() bool {
 	return len(b.Value) == 0
 }
 
@@ -502,7 +556,11 @@ func validate(value, validator string) error {
 		if !numberRegex.MatchString(value) {
 			return errors.New("invalid number value format: " + value)
 		}
-	case "B":
+	case "B64":
+		if !binary64Regex.MatchString(value) {
+			return errors.New("invalid binary value format: " + value)
+		}
+	case "BN":
 		if !binaryRegex.MatchString(value) {
 			return errors.New("invalid binary value format: " + value)
 		}

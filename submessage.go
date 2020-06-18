@@ -10,10 +10,10 @@ type SubMessage struct {
 	encoder       int
 	bitmapPrimary uint64
 
-	SE1 uint64   `format:"" length:"64"`
-	SE2 *ANS `format:"" length:"29" validator:"ANS"`
-	SE3 *ANS `format:"" length:"5" validator:"ANS"`
-	SE4 *N   `format:"" length:"10" validator:"N"`
+	SE1 uint64 `format:"" length:"64"`
+	SE2 *ANS   `format:"" length:"29" validator:"ANS"`
+	SE3 *ANS   `format:"" length:"5" validator:"ANS"`
+	SE4 *N     `format:"" length:"10" validator:"N"`
 	// SE5
 	// SE6
 	SE7 *ANS `format:"" length:"3" validator:"ANS"`
@@ -50,7 +50,7 @@ type SubMessage struct {
 	SE38 *ANP `format:"" length:"15" validator:"ANP"`
 	SE39 *AN  `format:"LLLVAR" length:"120" validator:"AN"`
 	SE40 *N   `format:"" length:"2" validator:"N"`
-	SE41 *B   `format:"LLLVAR" length:"100" validator:"B"`
+	SE41 *BN  `format:"LLLVAR" length:"100" validator:"BN"`
 	SE42 *N   `format:"" length:"3" validator:"N"`
 	// SE43
 	// SE44
@@ -94,7 +94,7 @@ type SubMessage struct {
 	SE82 *ANS `format:"" length:"1" validator:"ANS"`
 	SE83 *AN  `format:"" length:"1" validator:"AN"`
 	SE84 *ANS `format:"" length:"11" validator:"ANS"`
-	SE85 *B   `format:"LLLVAR" length:"256" validator:"B"`
+	SE85 *BN  `format:"LLLVAR" length:"256" validator:"BN"`
 	SE86 *ANS `format:"" length:"1" validator:"ANS"`
 	// SE87
 	SE88 *ANS `format:"" length:"1" validator:"ANS"`

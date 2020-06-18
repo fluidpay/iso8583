@@ -147,8 +147,8 @@ func TestMessageWithSubMessageEncodeWithExtendedBitmap(t *testing.T) {
 		t.Errorf("bitmapHex should be %s, instead of %s", hexExpected, bitmapHex(m.bitmapPrimary)+bitmapHex(m.DE1))
 	}
 	subMessagehexExpected := "F3A35000000000000000000040000000"
-	if bitmapHex(m.DE125.bitmapPrimary) + bitmapHex(m.DE125.SE1) != subMessagehexExpected {
-		t.Errorf("bitmapHex should be %s, instead of %s", subMessagehexExpected, bitmapHex(m.DE125.bitmapPrimary) + bitmapHex(m.DE125.SE1))
+	if bitmapHex(m.DE125.bitmapPrimary)+bitmapHex(m.DE125.SE1) != subMessagehexExpected {
+		t.Errorf("bitmapHex should be %s, instead of %s", subMessagehexExpected, bitmapHex(m.DE125.bitmapPrimary)+bitmapHex(m.DE125.SE1))
 	}
 
 	expectedMsg := "1200C0000000000000000000000000000008104846811212107F3A35000000000000000000040000000Test Address                 123459876543210123A123112121111111100000000121"
@@ -156,7 +156,7 @@ func TestMessageWithSubMessageEncodeWithExtendedBitmap(t *testing.T) {
 		t.Errorf("Encoded should be %s, instead of %s", expectedMsg, string(b))
 	}
 
-	sm,_ := m.DE125.Encode()
+	sm, _ := m.DE125.Encode()
 	expectedSubmessage := "F3A35000000000000000000040000000Test Address                 123459876543210123A123112121111111100000000121"
 	if string(sm) != expectedSubmessage {
 		t.Errorf("Encoded should be %s, instead of %s", expectedSubmessage, string(sm))

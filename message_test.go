@@ -68,7 +68,7 @@ func TestBalanceInquiryFromAnATM(t *testing.T) {
 		DE42: NewANS(""),                                                           // Card Acceptor Identification Code
 		DE43: NewANS("NJ NEWARK          123 PINE STREET      USWRIGHT AID DRUGS"), // Card Acceptor Name/Location
 		DE49: NewNumeric("840"),                                                    // Currency Code, Transaction
-		DE52: NewBinaryHex("CD2C09CDCA80244C"),                                     // Personal Identification Number Data
+		DE52: NewBinary64Hex("CD2C09CDCA80244C"),                                   // Personal Identification Number Data
 	}
 	m.Mti = "1100"
 	b, err := m.Encode()
@@ -540,7 +540,7 @@ func TestDecodeBalanceInquiryFromAnATM(t *testing.T) {
 		DE42: NewANS(""),                                                           // Card Acceptor Identification Code
 		DE43: NewANS("NJ NEWARK          123 PINE STREET      USWRIGHT AID DRUGS"), // Card Acceptor Name/Location
 		DE49: NewNumeric("840"),                                                    // Currency Code, Transaction
-		DE52: NewBinaryHex("CD2C09CDCA80244C"),                                     // Personal Identification Number Data
+		DE52: NewBinary64Hex("CD2C09CDCA80244C"),                                   // Personal Identification Number Data
 	}
 	expectedMsg.Mti = "1100"
 	expectedMsg.encoder = ASCII
