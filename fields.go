@@ -464,6 +464,18 @@ func (ans *ANS) isEmpty() bool {
 	return len(ans.Value) == 0
 }
 
+type Reserved struct {
+	Value []byte
+}
+
+func (r *Reserved) Encode(encoder, length int, format, validator string) ([]byte, error) {
+	return nil, errors.New("reserved field not allowed")
+}
+
+func (r *Reserved) Decode(raw []byte, encoder, length int, format, validator string) (int, error) {
+	return 0, errors.New("reserved field not allowed")
+}
+
 func lengthIndicator(encoder, length int, format string) ([]byte, error) {
 	switch format {
 	case "LLVAR":

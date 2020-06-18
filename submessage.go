@@ -14,35 +14,35 @@ type SubMessage struct {
 	SE2 *ANS   `format:"" length:"29" validator:"ANS"`
 	SE3 *ANS   `format:"" length:"5" validator:"ANS"`
 	SE4 *N     `format:"" length:"10" validator:"N"`
-	// SE5
-	// SE6
+	SE5 *Reserved
+	SE6 *Reserved
 	SE7 *ANS `format:"" length:"3" validator:"ANS"`
 	SE8 *ANS `format:"" length:"1" validator:"ANS"`
 	SE9 *AN  `format:"" length:"3" validator:"AN"`
-	// SE10
+	SE10 *Reserved
 	SE11 *AN `format:"" length:"1" validator:"AN"`
-	// SE12
-	// SE13
-	// SE14
+	SE12 *Reserved
+	SE13 *Reserved
+	SE14 *Reserved
 	SE15 *ANS `format:"" length:"2" validator:"ANS"`
 	SE16 *ANS `format:"" length:"2" validator:"ANS"`
-	// SE17
+	SE17 *Reserved
 	SE18 *ANS `format:"" length:"16" validator:"ANS"`
 	SE19 *ANS `format:"" length:"999" validator:"ANS"`
 	SE20 *ANS `format:"" length:"2" validator:"ANS"`
 	SE21 *ANS `format:"" length:"194" validator:"ANS"` // ANS 255 if Tagged field 0008 is included
 	SE22 *ANS `format:"LLLVAR" length:"255" validator:"ANS"`
-	// SE23
+	SE23 *Reserved
 	SE24 *ANS `format:"LLVAR" length:"99" validator:"ANS"`
 	SE25 *ANS `format:"LLVAR" length:"99" validator:"ANS"`
 	SE26 *N   `format:"" length:"3" validator:"N"`
 	SE27 *ANS `format:"" length:"1" validator:"ANS"`
-	// SE28
+	SE28 *Reserved
 	SE29 *ANS `format:"" length:"9" validator:"ANS"`
 	SE30 *N   `format:"" length:"4" validator:"N"`
 	SE31 *ANS `format:"LLLVAR" length:"255" validator:"ANS"`
-	// SE32
-	// SE33
+	SE32 *Reserved
+	SE33 *Reserved
 	SE34 *N   `format:"" length:"11" validator:"N"`
 	SE35 *N   `format:"" length:"11" validator:"N"`
 	SE36 *ANS `format:"" length:"15" validator:"ANS"`
@@ -52,17 +52,17 @@ type SubMessage struct {
 	SE40 *N   `format:"" length:"2" validator:"N"`
 	SE41 *BN  `format:"LLLVAR" length:"100" validator:"BN"`
 	SE42 *N   `format:"" length:"3" validator:"N"`
-	// SE43
-	// SE44
-	// SE45
-	// SE46
-	// SE47
-	// SE48
-	// SE49
-	// SE50
-	// SE51
-	// SE52
-	// SE53
+	SE43 *Reserved
+	SE44 *Reserved
+	SE45 *Reserved
+	SE46 *Reserved
+	SE47 *Reserved
+	SE48 *Reserved
+	SE49 *Reserved
+	SE50 *Reserved
+	SE51 *Reserved
+	SE52 *Reserved
+	SE53 *Reserved
 	SE54 *ANS `format:"" length:"6" validator:"ANS"`
 	SE55 *AN  `format:"LLLVAR" length:"120" validator:"AN"`
 	SE56 *N   `format:"LLVAR" length:"45" validator:"N"`
@@ -96,12 +96,12 @@ type SubMessage struct {
 	SE84 *ANS `format:"" length:"11" validator:"ANS"`
 	SE85 *BN  `format:"LLLVAR" length:"256" validator:"BN"`
 	SE86 *ANS `format:"" length:"1" validator:"ANS"`
-	// SE87
+	SE87 *Reserved
 	SE88 *ANS `format:"" length:"1" validator:"ANS"`
 	SE89 *ANS `format:"" length:"15" validator:"ANS"`
 	SE90 *ANS `format:"" length:"6" validator:"ANS"`
 	SE91 *ANS `format:"LLLVAR" length:"255" validator:"ANS"`
-	// SE92
+	SE92 *Reserved
 	SE93 *N  `format:"" length:"4" validator:"N"`
 	SE94 *N  `format:"LLVAR" length:"19" validator:"N"`
 	SE95 *AN `format:"" length:"2" validator:"AN"`
@@ -185,7 +185,6 @@ func (m *SubMessage) Decode(bytes []byte) error {
 	// it is an iterator, watching where we are currently in the iteration,
 	// which byte will be the starting position of the next decode
 	it := 0
-	//m.Mti = string(bytes[:it])
 
 	// decode bitmaps
 	//decode primary bitmap
