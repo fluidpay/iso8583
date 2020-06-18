@@ -273,6 +273,3 @@ func TestMessageDecodeBinaries(t *testing.T) {
 		t.Error("not equal")
 	}
 }
-
-
-
