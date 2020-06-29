@@ -16,9 +16,7 @@ const (
 
 type field interface {
 	Encode(encoder, length int, format, validator string) ([]byte, error)
-
 	Decode(b []byte, encoder, length int, format, validator string) (int, error)
-
 	isEmpty() bool
 }
 
@@ -91,6 +89,10 @@ func (n *N) isEmpty() bool {
 	return len(n.Value) == 0
 }
 
+func (n N) String() string {
+	return string(n.Value)
+}
+
 type AN struct {
 	Value []byte
 }
@@ -158,6 +160,10 @@ func (an *AN) isEmpty() bool {
 	return len(an.Value) == 0
 }
 
+func (an AN) String() string {
+	return string(an.Value)
+}
+
 type B64 struct {
 	Value []byte
 }
@@ -206,6 +212,10 @@ func (b *B64) Decode(raw []byte, encoder, length int, format, validator string) 
 
 func (b *B64) isEmpty() bool {
 	return len(b.Value) == 0
+}
+
+func (b B64) String() string {
+	return string(b.Value)
 }
 
 type BN struct {
@@ -269,6 +279,10 @@ func (b *BN) isEmpty() bool {
 	return len(b.Value) == 0
 }
 
+func (b BN) String() string {
+	return string(b.Value)
+}
+
 type Z struct {
 	Value []byte
 }
@@ -328,6 +342,10 @@ func (z *Z) Decode(raw []byte, encoder, length int, format, validator string) (i
 }
 func (z *Z) isEmpty() bool {
 	return len(z.Value) == 0
+}
+
+func (z Z) String() string {
+	return string(z.Value)
 }
 
 type ANP struct {
@@ -397,6 +415,10 @@ func (anp *ANP) isEmpty() bool {
 	return len(anp.Value) == 0
 }
 
+func (anp ANP) String() string {
+	return string(anp.Value)
+}
+
 type ANS struct {
 	Value []byte
 }
@@ -464,6 +486,10 @@ func (ans *ANS) isEmpty() bool {
 	return len(ans.Value) == 0
 }
 
+func (ans ANS) String() string {
+	return string(ans.Value)
+}
+
 type Reserved struct {
 	Value []byte
 }
@@ -478,6 +504,10 @@ func (r *Reserved) Decode(raw []byte, encoder, length int, format, validator str
 
 func (r *Reserved) isEmpty() bool {
 	return true
+}
+
+func (r Reserved) String() string {
+	return ""
 }
 
 func lengthIndicator(encoder, length int, format string) ([]byte, error) {

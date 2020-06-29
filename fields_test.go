@@ -23,6 +23,8 @@ func TestNumericFixed(t *testing.T) {
 	if !bytes.Equal(b, []byte("012345")) {
 		t.Error("bad encoding")
 	}
+	str := n.String()
+	equals(t, str, "12345", "string should be the same")
 
 	n = NewNumeric("12345")
 	b, err = n.Encode(ASCII, 10, "", "N")
@@ -32,6 +34,8 @@ func TestNumericFixed(t *testing.T) {
 	if !bytes.Equal(b, []byte("0000012345")) {
 		t.Error("bad encoding")
 	}
+	str = n.String()
+	equals(t, str, "12345", "string should be the same")
 }
 
 func TestNumericLLVAR(t *testing.T) {
@@ -43,6 +47,8 @@ func TestNumericLLVAR(t *testing.T) {
 	if !bytes.Equal(b, []byte("0512345")) {
 		t.Error("bad encoding")
 	}
+	str := n.String()
+	equals(t, str, "12345", "string should be the same")
 
 	b, err = n.Encode(ASCII, 4, "LLVAR", "N")
 	if err == nil {
@@ -64,6 +70,8 @@ func TestNumericLLLVAR(t *testing.T) {
 	if !bytes.Equal(b, []byte("00512345")) {
 		t.Error("bad encoding")
 	}
+	str := n.String()
+	equals(t, str, "12345", "string should be the same")
 
 	b, err = n.Encode(ASCII, 4, "LLLVAR", "N")
 	if err == nil {
@@ -85,6 +93,8 @@ func TestAlphaNumericFixed(t *testing.T) {
 	if !bytes.Equal(b, []byte("12AN      ")) {
 		t.Error("bad encoding")
 	}
+	str := n.String()
+	equals(t, str, "12AN", "string should be the same")
 }
 
 func TestAlphaNumericLLVAR(t *testing.T) {
@@ -96,6 +106,8 @@ func TestAlphaNumericLLVAR(t *testing.T) {
 	if !bytes.Equal(b, []byte("4812ANABCDEFGHTCASDASSAASCSACSACSACSACSACACSACSACS")) {
 		t.Error("bad encoding")
 	}
+	str := n.String()
+	equals(t, str, "12ANABCDEFGHTCASDASSAASCSACSACSACSACSACACSACSACS", "string should be the same")
 }
 
 func TestAlphaNumericLLLVAR(t *testing.T) {
@@ -107,6 +119,8 @@ func TestAlphaNumericLLLVAR(t *testing.T) {
 	if !bytes.Equal(b, []byte("04812ANABCDEFGHTCASDASSAASCSACSACSACSACSACACSACSACS")) {
 		t.Error("bad encoding")
 	}
+	str := n.String()
+	equals(t, str, "12ANABCDEFGHTCASDASSAASCSACSACSACSACSACACSACSACS", "string should be the same")
 }
 
 func TestNDecode(t *testing.T) {
@@ -125,4 +139,10 @@ func TestNDecode(t *testing.T) {
 	}
 	t.Log(string(n.Value))
 	t.Log(nn)
+}
+
+func equals(t *testing.T, actual, expected, description string) {
+	if actual != expected {
+		t.Errorf("Data should be %s, instead of %s [%s]", expected, actual, description)
+	}
 }
