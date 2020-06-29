@@ -10,6 +10,10 @@ import (
 
 var actual iso8583.Message
 
+type Printer interface {
+	String() string
+}
+
 func main() {
 	for {
 		var msg string
@@ -42,10 +46,14 @@ func printActual(searchFor string) {
 	for i := 0; i < rt.NumField(); i++ {
 		if searchFor != "" {
 			if strings.Contains(strings.ToLower(rt.Field(i).Name), searchFor) {
-				fmt.Printf("%s -> %s\n", rt.Field(i).Name, reflect.Indirect(rv.Field(i)).String())
+				if reflect.Indirect(rv.Field(i)).IsValid() {
+					fmt.Printf("%s -> %s\n", rt.Field(i).Name, reflect.Indirect(rv.Field(i)))
+				}
 			}
 		} else {
-			fmt.Printf("%s -> %s\n", rt.Field(i).Name, reflect.Indirect(rv.Field(i)).String())
+			if reflect.Indirect(rv.Field(i)).IsValid() {
+				fmt.Printf("%s -> %s\n", rt.Field(i).Name, reflect.Indirect(rv.Field(i)))
+			}
 		}
 	}
 }
