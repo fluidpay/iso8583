@@ -16,12 +16,8 @@ const (
 
 type field interface {
 	Encode(encoder, length int, format, validator string) ([]byte, error)
-
 	Decode(b []byte, encoder, length int, format, validator string) (int, error)
-
 	isEmpty() bool
-
-	String(encoder, length int, format, validator string) (string, error)
 }
 
 type N struct {
@@ -93,9 +89,8 @@ func (n *N) isEmpty() bool {
 	return len(n.Value) == 0
 }
 
-func (n *N) String(encoder, length int, format, validator string) (string, error) {
-	byt, err := n.Encode(encoder, length, format, validator)
-	return string(byt), err
+func (n N) String() string {
+	return string(n.Value)
 }
 
 type AN struct {
@@ -165,9 +160,8 @@ func (an *AN) isEmpty() bool {
 	return len(an.Value) == 0
 }
 
-func (an *AN) String(encoder, length int, format, validator string) (string, error) {
-	byt, err := an.Encode(encoder, length, format, validator)
-	return string(byt), err
+func (an AN) String() string {
+	return string(an.Value)
 }
 
 type B64 struct {
@@ -220,9 +214,8 @@ func (b *B64) isEmpty() bool {
 	return len(b.Value) == 0
 }
 
-func (b *B64) String(encoder, length int, format, validator string) (string, error) {
-	byt, err := b.Encode(encoder, length, format, validator)
-	return string(byt), err
+func (b B64) String() string {
+	return string(b.Value)
 }
 
 type BN struct {
@@ -286,9 +279,8 @@ func (b *BN) isEmpty() bool {
 	return len(b.Value) == 0
 }
 
-func (b *BN) String(encoder, length int, format, validator string) (string, error) {
-	byt, err := b.Encode(encoder, length, format, validator)
-	return string(byt), err
+func (b BN) String() string {
+	return string(b.Value)
 }
 
 type Z struct {
@@ -352,9 +344,8 @@ func (z *Z) isEmpty() bool {
 	return len(z.Value) == 0
 }
 
-func (z *Z) String(encoder, length int, format, validator string) (string, error) {
-	byt, err := z.Encode(encoder, length, format, validator)
-	return string(byt), err
+func (z Z) String() string {
+	return string(z.Value)
 }
 
 type ANP struct {
@@ -424,9 +415,8 @@ func (anp *ANP) isEmpty() bool {
 	return len(anp.Value) == 0
 }
 
-func (anp *ANP) String(encoder, length int, format, validator string) (string, error) {
-	byt, err := anp.Encode(encoder, length, format, validator)
-	return string(byt), err
+func (anp ANP) String() string {
+	return string(anp.Value)
 }
 
 type ANS struct {
@@ -496,9 +486,8 @@ func (ans *ANS) isEmpty() bool {
 	return len(ans.Value) == 0
 }
 
-func (ans *ANS) String(encoder, length int, format, validator string) (string, error) {
-	byt, err := ans.Encode(encoder, length, format, validator)
-	return string(byt), err
+func (ans ANS) String() string {
+	return string(ans.Value)
 }
 
 type Reserved struct {
@@ -517,8 +506,8 @@ func (r *Reserved) isEmpty() bool {
 	return true
 }
 
-func (r *Reserved) String(encoder, length int, format, validator string) (string, error) {
-	return "", errors.New("reserved field not allowed")
+func (r Reserved) String() string {
+	return ""
 }
 
 func lengthIndicator(encoder, length int, format string) ([]byte, error) {
