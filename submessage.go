@@ -10,105 +10,105 @@ type SubMessage struct {
 	encoder       int
 	bitmapPrimary uint64
 
-	SE1 uint64 `format:"" length:"64"`
-	SE2 *ANS   `format:"" length:"29" validator:"ANS"`
-	SE3 *ANS   `format:"" length:"5" validator:"ANS"`
-	SE4 *N     `format:"" length:"10" validator:"N"`
-	SE5 *Reserved
-	SE6 *Reserved
-	SE7 *ANS `format:"" length:"3" validator:"ANS"`
-	SE8 *ANS `format:"" length:"1" validator:"ANS"`
-	SE9 *AN  `format:"" length:"3" validator:"AN"`
-	SE10 *Reserved
-	SE11 *AN `format:"" length:"1" validator:"AN"`
-	SE12 *Reserved
-	SE13 *Reserved
-	SE14 *Reserved
-	SE15 *ANS `format:"" length:"2" validator:"ANS"`
-	SE16 *ANS `format:"" length:"2" validator:"ANS"`
-	SE17 *Reserved
-	SE18 *ANS `format:"" length:"16" validator:"ANS"`
-	SE19 *ANS `format:"" length:"999" validator:"ANS"`
-	SE20 *ANS `format:"" length:"2" validator:"ANS"`
-	SE21 *ANS `format:"" length:"194" validator:"ANS"` // ANS 255 if Tagged field 0008 is included
-	SE22 *ANS `format:"LLLVAR" length:"255" validator:"ANS"`
-	SE23 *Reserved
-	SE24 *ANS `format:"LLVAR" length:"99" validator:"ANS"`
-	SE25 *ANS `format:"LLVAR" length:"99" validator:"ANS"`
-	SE26 *N   `format:"" length:"3" validator:"N"`
-	SE27 *ANS `format:"" length:"1" validator:"ANS"`
-	SE28 *Reserved
-	SE29 *ANS `format:"" length:"9" validator:"ANS"`
-	SE30 *N   `format:"" length:"4" validator:"N"`
-	SE31 *ANS `format:"LLLVAR" length:"255" validator:"ANS"`
-	SE32 *Reserved
-	SE33 *Reserved
-	SE34 *N   `format:"" length:"11" validator:"N"`
-	SE35 *N   `format:"" length:"11" validator:"N"`
-	SE36 *ANS `format:"" length:"15" validator:"ANS"`
-	SE37 *AN  `format:"" length:"7" validator:"AN"`
-	SE38 *ANP `format:"" length:"15" validator:"ANP"`
-	SE39 *AN  `format:"LLLVAR" length:"120" validator:"AN"`
-	SE40 *N   `format:"" length:"2" validator:"N"`
-	SE41 *BN  `format:"LLLVAR" length:"100" validator:"BN"`
-	SE42 *N   `format:"" length:"3" validator:"N"`
-	SE43 *Reserved
-	SE44 *Reserved
-	SE45 *Reserved
-	SE46 *Reserved
-	SE47 *Reserved
-	SE48 *Reserved
-	SE49 *Reserved
-	SE50 *Reserved
-	SE51 *Reserved
-	SE52 *Reserved
-	SE53 *Reserved
-	SE54 *ANS `format:"" length:"6" validator:"ANS"`
-	SE55 *AN  `format:"LLLVAR" length:"120" validator:"AN"`
-	SE56 *N   `format:"LLVAR" length:"45" validator:"N"`
-	SE57 *AN  `format:"LLVAR" length:"10" validator:"AN"`
-	SE58 *N   `format:"LLVAR" length:"30" validator:"N"`
-	SE59 *AN  `format:"LLVAR" length:"10" validator:"AN"`
-	SE60 *N   `format:"" length:"1" validator:"N"`
-	SE61 *N   `format:"" length:"4" validator:"N"`
-	SE62 *N   `format:"" length:"1" validator:"N"`
-	SE63 *ANS `format:"" length:"94" validator:"ANS"`
-	SE64 *AN  `format:"" length:"1" validator:"AN"`
-	SE65 *AN  `format:"" length:"1" validator:"AN"`
-	SE66 *AN  `format:"" length:"6" validator:"AN"`
-	SE67 *AN  `format:"" length:"1" validator:"AN"`
-	SE68 *ANS `format:"" length:"40" validator:"ANS"`
-	SE69 *ANP `format:"" length:"6" validator:"ANP"`
-	SE70 *ANS `format:"" length:"15" validator:"ANS"`
-	SE71 *ANS `format:"LLLVAR" length:"999" validator:"ANS"`
-	SE72 *ANS `format:"LLLVAR" length:"999" validator:"ANS"`
-	SE73 *ANS `format:"LLLVAR" length:"999" validator:"ANS"`
-	SE74 *ANS `format:"LLLVAR" length:"999" validator:"ANS"`
-	SE75 *ANS `format:"" length:"3" validator:"ANS"`
-	SE76 *ANS `format:"" length:"23" validator:"ANS"`
-	SE77 *ANS `format:"" length:"12" validator:"ANS"`
-	SE78 *ANS `format:"" length:"15" validator:"ANS"`
-	SE79 *ANS `format:"" length:"4" validator:"ANS"`
-	SE80 *ANS `format:"" length:"1" validator:"ANS"`
-	SE81 *ANS `format:"" length:"2" validator:"ANS"`
-	SE82 *ANS `format:"" length:"1" validator:"ANS"`
-	SE83 *AN  `format:"" length:"1" validator:"AN"`
-	SE84 *ANS `format:"" length:"11" validator:"ANS"`
-	SE85 *BN  `format:"LLLVAR" length:"256" validator:"BN"`
-	SE86 *ANS `format:"" length:"1" validator:"ANS"`
-	SE87 *Reserved
-	SE88 *ANS `format:"" length:"1" validator:"ANS"`
-	SE89 *ANS `format:"" length:"15" validator:"ANS"`
-	SE90 *ANS `format:"" length:"6" validator:"ANS"`
-	SE91 *ANS `format:"LLLVAR" length:"255" validator:"ANS"`
-	SE92 *Reserved
-	SE93 *N  `format:"" length:"4" validator:"N"`
-	SE94 *N  `format:"LLVAR" length:"19" validator:"N"`
-	SE95 *AN `format:"" length:"2" validator:"AN"`
-	SE96 *N  `format:"LLVAR" length:"19" validator:"N"`
-	SE97 *N  `format:"" length:"11" validator:"N"`
-	SE98 *AN `format:"" length:"1" validator:"AN"`
-	SE99 *AN `format:"LLVAR" length:"99" validator:"AN"`
+	SE1 uint64 `format:"" length:"64"  json:",omitempty"`
+	SE2 *ANS   `format:"" length:"29" validator:"ANS"  json:",omitempty"`
+	SE3 *ANS   `format:"" length:"5" validator:"ANS"  json:",omitempty"`
+	SE4 *N     `format:"" length:"10" validator:"N"  json:",omitempty"`
+	SE5 *Reserved `json:",omitempty"` 
+	SE6 *Reserved `json:",omitempty"`
+	SE7 *ANS `format:"" length:"3" validator:"ANS"  json:",omitempty"`
+	SE8 *ANS `format:"" length:"1" validator:"ANS"  json:",omitempty"`
+	SE9 *AN  `format:"" length:"3" validator:"AN"  json:",omitempty"`
+	SE10 *Reserved `json:",omitempty"`
+	SE11 *AN `format:"" length:"1" validator:"AN"  json:",omitempty"`
+	SE12 *Reserved `json:",omitempty"`
+	SE13 *Reserved `json:",omitempty"`
+	SE14 *Reserved `json:",omitempty"`
+	SE15 *ANS `format:"" length:"2" validator:"ANS"  json:",omitempty"`
+	SE16 *ANS `format:"" length:"2" validator:"ANS"  json:",omitempty"`
+	SE17 *Reserved `json:",omitempty"`
+	SE18 *ANS `format:"" length:"16" validator:"ANS"  json:",omitempty"`
+	SE19 *ANS `format:"" length:"999" validator:"ANS"  json:",omitempty"`
+	SE20 *ANS `format:"" length:"2" validator:"ANS"  json:",omitempty"`
+	SE21 *ANS `format:"" length:"194" validator:"ANS"  json:",omitempty"` // ANS 255 if Tagged field 0008 is included
+	SE22 *ANS `format:"LLLVAR" length:"255" validator:"ANS"  json:",omitempty"`
+	SE23 *Reserved `json:",omitempty"`
+	SE24 *ANS `format:"LLVAR" length:"99" validator:"ANS"  json:",omitempty"`
+	SE25 *ANS `format:"LLVAR" length:"99" validator:"ANS"  json:",omitempty"`
+	SE26 *N   `format:"" length:"3" validator:"N"  json:",omitempty"`
+	SE27 *ANS `format:"" length:"1" validator:"ANS"  json:",omitempty"`
+	SE28 *Reserved `json:",omitempty"`
+	SE29 *ANS `format:"" length:"9" validator:"ANS"  json:",omitempty"`
+	SE30 *N   `format:"" length:"4" validator:"N"  json:",omitempty"`
+	SE31 *ANS `format:"LLLVAR" length:"255" validator:"ANS"  json:",omitempty"`
+	SE32 *Reserved `json:",omitempty"`
+	SE33 *Reserved `json:",omitempty"`
+	SE34 *N   `format:"" length:"11" validator:"N"  json:",omitempty"`
+	SE35 *N   `format:"" length:"11" validator:"N"  json:",omitempty"`
+	SE36 *ANS `format:"" length:"15" validator:"ANS"  json:",omitempty"`
+	SE37 *AN  `format:"" length:"7" validator:"AN"  json:",omitempty"`
+	SE38 *ANP `format:"" length:"15" validator:"ANP"  json:",omitempty"`
+	SE39 *AN  `format:"LLLVAR" length:"120" validator:"AN"  json:",omitempty"`
+	SE40 *N   `format:"" length:"2" validator:"N"  json:",omitempty"`
+	SE41 *BN  `format:"LLLVAR" length:"100" validator:"BN"  json:",omitempty"`
+	SE42 *N   `format:"" length:"3" validator:"N"  json:",omitempty"`
+	SE43 *Reserved `json:",omitempty"`
+	SE44 *Reserved `json:",omitempty"`
+	SE45 *Reserved `json:",omitempty"`
+	SE46 *Reserved `json:",omitempty"`
+	SE47 *Reserved `json:",omitempty"`
+	SE48 *Reserved `json:",omitempty"`
+	SE49 *Reserved `json:",omitempty"`
+	SE50 *Reserved `json:",omitempty"`
+	SE51 *Reserved `json:",omitempty"`
+	SE52 *Reserved `json:",omitempty"`
+	SE53 *Reserved `json:",omitempty"`
+	SE54 *ANS `format:"" length:"6" validator:"ANS"  json:",omitempty"`
+	SE55 *AN  `format:"LLLVAR" length:"120" validator:"AN"  json:",omitempty"`
+	SE56 *N   `format:"LLVAR" length:"45" validator:"N"  json:",omitempty"`
+	SE57 *AN  `format:"LLVAR" length:"10" validator:"AN"  json:",omitempty"`
+	SE58 *N   `format:"LLVAR" length:"30" validator:"N"  json:",omitempty"`
+	SE59 *AN  `format:"LLVAR" length:"10" validator:"AN"  json:",omitempty"`
+	SE60 *N   `format:"" length:"1" validator:"N"  json:",omitempty"`
+	SE61 *N   `format:"" length:"4" validator:"N"  json:",omitempty"`
+	SE62 *N   `format:"" length:"1" validator:"N"  json:",omitempty"`
+	SE63 *ANS `format:"" length:"94" validator:"ANS"  json:",omitempty"`
+	SE64 *AN  `format:"" length:"1" validator:"AN"  json:",omitempty"`
+	SE65 *AN  `format:"" length:"1" validator:"AN"  json:",omitempty"`
+	SE66 *AN  `format:"" length:"6" validator:"AN"  json:",omitempty"`
+	SE67 *AN  `format:"" length:"1" validator:"AN"  json:",omitempty"`
+	SE68 *ANS `format:"" length:"40" validator:"ANS"  json:",omitempty"`
+	SE69 *ANP `format:"" length:"6" validator:"ANP"  json:",omitempty"`
+	SE70 *ANS `format:"" length:"15" validator:"ANS"  json:",omitempty"`
+	SE71 *ANS `format:"LLLVAR" length:"999" validator:"ANS"  json:",omitempty"`
+	SE72 *ANS `format:"LLLVAR" length:"999" validator:"ANS"  json:",omitempty"`
+	SE73 *ANS `format:"LLLVAR" length:"999" validator:"ANS"  json:",omitempty"`
+	SE74 *ANS `format:"LLLVAR" length:"999" validator:"ANS"  json:",omitempty"`
+	SE75 *ANS `format:"" length:"3" validator:"ANS"  json:",omitempty"`
+	SE76 *ANS `format:"" length:"23" validator:"ANS"  json:",omitempty"`
+	SE77 *ANS `format:"" length:"12" validator:"ANS"  json:",omitempty"`
+	SE78 *ANS `format:"" length:"15" validator:"ANS"  json:",omitempty"`
+	SE79 *ANS `format:"" length:"4" validator:"ANS"  json:",omitempty"`
+	SE80 *ANS `format:"" length:"1" validator:"ANS"  json:",omitempty"`
+	SE81 *ANS `format:"" length:"2" validator:"ANS"  json:",omitempty"`
+	SE82 *ANS `format:"" length:"1" validator:"ANS"  json:",omitempty"`
+	SE83 *AN  `format:"" length:"1" validator:"AN"  json:",omitempty"`
+	SE84 *ANS `format:"" length:"11" validator:"ANS"  json:",omitempty"`
+	SE85 *BN  `format:"LLLVAR" length:"256" validator:"BN"  json:",omitempty"`
+	SE86 *ANS `format:"" length:"1" validator:"ANS"  json:",omitempty"`
+	SE87 *Reserved `json:",omitempty"`
+	SE88 *ANS `format:"" length:"1" validator:"ANS"  json:",omitempty"`
+	SE89 *ANS `format:"" length:"15" validator:"ANS"  json:",omitempty"`
+	SE90 *ANS `format:"" length:"6" validator:"ANS"  json:",omitempty"`
+	SE91 *ANS `format:"LLLVAR" length:"255" validator:"ANS"  json:",omitempty"`
+	SE92 *Reserved `json:",omitempty"`
+	SE93 *N  `format:"" length:"4" validator:"N"  json:",omitempty"`
+	SE94 *N  `format:"LLVAR" length:"19" validator:"N"  json:",omitempty"`
+	SE95 *AN `format:"" length:"2" validator:"AN"  json:",omitempty"`
+	SE96 *N  `format:"LLVAR" length:"19" validator:"N"  json:",omitempty"`
+	SE97 *N  `format:"" length:"11" validator:"N"  json:",omitempty"`
+	SE98 *AN `format:"" length:"1" validator:"AN"  json:",omitempty"`
+	SE99 *AN `format:"LLVAR" length:"99" validator:"AN"  json:",omitempty"`
 }
 
 func (m *SubMessage) Encode() ([]byte, error) {
