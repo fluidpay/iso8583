@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -93,6 +94,16 @@ func (n N) String() string {
 	return string(n.Value)
 }
 
+func (n *N) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf(`"%s"`, n.Value)), nil
+}
+
+func (n *N) UnmarshalJSON(data []byte) error {
+	content := strings.Replace(string(data), `"`, "", -1)
+	n.Value = []byte(content)
+	return nil
+}
+
 type AN struct {
 	Value []byte
 }
@@ -164,6 +175,16 @@ func (an AN) String() string {
 	return string(an.Value)
 }
 
+func (an *AN) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf(`"%s"`, an.Value)), nil
+}
+
+func (an *AN) UnmarshalJSON(data []byte) error {
+	content := strings.Replace(string(data), `"`, "", -1)
+	an.Value = []byte(content)
+	return nil
+}
+
 type B64 struct {
 	Value []byte
 }
@@ -216,6 +237,16 @@ func (b *B64) isEmpty() bool {
 
 func (b B64) String() string {
 	return string(b.Value)
+}
+
+func (b *B64) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf(`"%s"`, b.Value)), nil
+}
+
+func (b *B64) UnmarshalJSON(data []byte) error {
+	content := strings.Replace(string(data), `"`, "", -1)
+	b.Value = []byte(content)
+	return nil
 }
 
 type BN struct {
@@ -283,6 +314,16 @@ func (b BN) String() string {
 	return string(b.Value)
 }
 
+func (b *BN) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf(`"%s"`, b.Value)), nil
+}
+
+func (b *BN) UnmarshalJSON(data []byte) error {
+	content := strings.Replace(string(data), `"`, "", -1)
+	b.Value = []byte(content)
+	return nil
+}
+
 type Z struct {
 	Value []byte
 }
@@ -346,6 +387,16 @@ func (z *Z) isEmpty() bool {
 
 func (z Z) String() string {
 	return string(z.Value)
+}
+
+func (z *Z) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf(`"%s"`, z.Value)), nil
+}
+
+func (z *Z) UnmarshalJSON(data []byte) error {
+	content := strings.Replace(string(data), `"`, "", -1)
+	z.Value = []byte(content)
+	return nil
 }
 
 type ANP struct {
@@ -419,6 +470,16 @@ func (anp ANP) String() string {
 	return string(anp.Value)
 }
 
+func (anp *ANP) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf(`"%s"`, anp.Value)), nil
+}
+
+func (anp *ANP) UnmarshalJSON(data []byte) error {
+	content := strings.Replace(string(data), `"`, "", -1)
+	anp.Value = []byte(content)
+	return nil
+}
+
 type ANS struct {
 	Value []byte
 }
@@ -490,6 +551,16 @@ func (ans ANS) String() string {
 	return string(ans.Value)
 }
 
+func (ans *ANS) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf(`"%s"`, ans.Value)), nil
+}
+
+func (ans *ANS) UnmarshalJSON(data []byte) error {
+	content := strings.Replace(string(data), `"`, "", -1)
+	ans.Value = []byte(content)
+	return nil
+}
+
 type Reserved struct {
 	Value []byte
 }
@@ -508,6 +579,16 @@ func (r *Reserved) isEmpty() bool {
 
 func (r Reserved) String() string {
 	return ""
+}
+
+func (r *Reserved) MarshalJSON() ([]byte, error) {
+	return []byte(`""`), nil
+}
+
+func (r *Reserved) UnmarshalJSON(data []byte) error {
+	content := strings.Replace(string(data), `"`, "", -1)
+	r.Value = []byte(content)
+	return nil
 }
 
 func lengthIndicator(encoder, length int, format string) ([]byte, error) {

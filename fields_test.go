@@ -2,6 +2,7 @@ package iso8583
 
 import (
 	"bytes"
+	"encoding/json"
 	"testing"
 )
 
@@ -141,7 +142,50 @@ func TestNDecode(t *testing.T) {
 	t.Log(nn)
 }
 
+func TestMarshalJSON(t *testing.T) {
+	m := Message{
+		DE2: NewNumeric("1234412"),
+		DE22: NewAlphanumeric("3123"),
+		DE35: NewTrack2Code("latrack2"),
+		DE37: NewANP("affa32"),
+		DE41: NewANS("ans433"),
+		DE52: NewBinary64("433"),
+		DE125: &SubMessage{
+			SE85: NewBN("123"),
+		},
+	}
+	result, err := json.Marshal(m)
+	if err != nil {
+		t.Fatal(err)
+	}
+	expected := `{"DE2":"1234412","DE22":"3123","DE35":"latrack2","DE37":"affa32","DE41":"ans433","DE52":"00000000000001B1","DE125":{"SE85":"123"}}`
+	equals(t, string(result), expected, "")
+}
+
+func TestUnmarshalJSON(t *testing.T) {
+	m := Message{}
+	expected := `{"DE2":"1234412","DE22":"3123","DE35":"latrack2","DE37":"affa32","DE41":"ans433","DE52":"00000000000001B1","DE125":{"SE85":"123"}}`
+	// expected := `{"DE2":"1234412"}`
+	err := json.Unmarshal([]byte(expected), &m)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	equals(t, string(m.DE2.Value), "1234412", "")
+	equals(t, string(m.DE22.Value), "3123", "")
+	equals(t, string(m.DE35.Value), "latrack2", "")
+	equals(t, string(m.DE37.Value), "affa32", "")
+	equals(t, string(m.DE41.Value), "ans433", "")
+	equals(t, string(m.DE52.Value), "00000000000001B1", "")
+	equals(t, string(m.DE125.SE85.Value), "123", "")
+
+	//equals(t, string(result), expected, "")
+}
+
 func equals(t *testing.T, actual, expected, description string) {
+	if description == "" {
+		description = "empty description"
+	}
 	if actual != expected {
 		t.Errorf("Data should be %s, instead of %s [%s]", expected, actual, description)
 	}

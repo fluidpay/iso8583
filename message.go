@@ -8,7 +8,7 @@ import (
 )
 
 type Message struct {
-	Mti string
+	Mti string `json:",omitempty"`
 
 	packedBitmap bool
 	packedMsg    bool
@@ -16,70 +16,70 @@ type Message struct {
 
 	bitmapPrimary uint64
 
-	DE1   uint64      `format:"" length:"64"` //secondary bitmap
-	DE2   *N          `format:"LLVAR" length:"19" validator:"N"`
-	DE3   *N          `format:"" length:"6" validator:"N"`
-	DE4   *N          `format:"" length:"12" validator:"N"`
-	DE5   *N          `format:"" length:"12" validator:"N"`
-	DE6   *N          `format:"" length:"12" validator:"N"`
-	DE7   *N          `format:"" length:"10" validator:"MMDDHHMMSS"`
-	DE9   *N          `format:"" length:"8" validator:"N"`
-	DE10  *N          `format:"" length:"8" validator:"N"`
-	DE11  *N          `format:"" length:"6" validator:"N"`
-	DE12  *N          `format:"" length:"12" validator:"YYMMDDHHMMSS"`
-	DE14  *N          `format:"" length:"4" validator:"YYMM"`
-	DE16  *N          `format:"" length:"4" validator:"MMDD"`
-	DE17  *N          `format:"" length:"4" validator:"MMDD"`
-	DE18  *N          `format:"" length:"4" validator:"N"`
-	DE19  *N          `format:"" length:"3" validator:"N"`
-	DE22  *AN         `format:"" length:"12" validator:"AN"`
-	DE23  *N          `format:"" length:"3" validator:"N"`
-	DE24  *N          `format:"" length:"3" validator:"N"`
-	DE25  *N          `format:"" length:"4" validator:"N"`
-	DE26  *N          `format:"" length:"4" validator:"N"`
-	DE28  *N          `format:"" length:"6" validator:"YYMMDD"`
-	DE30  *N          `format:"" length:"24" validator:"N"`
-	DE32  *N          `format:"LLVAR" length:"11" validator:"N"`
-	DE33  *N          `format:"LLVAR" length:"11" validator:"N"`
-	DE34  *N          `format:"LLVAR" length:"28" validator:"N"`
-	DE35  *Z          `format:"LLVAR" length:"37" validator:"Z"`
-	DE37  *ANP        `format:"" length:"12" validator:"ANP"`
-	DE38  *ANP        `format:"" length:"6" validator:"ANP"`
-	DE39  *N          `format:"" length:"3" validator:"N"`
-	DE41  *ANS        `format:"" length:"8" validator:"ANS"`
-	DE42  *ANS        `format:"" length:"15" validator:"ANS"`
-	DE43  *ANS        `format:"LLVAR" length:"99" validator:"ANS"`
-	DE46  *ANS        `format:"LLLVAR" length:"186" validator:"ANS"`
-	DE47  *ANS        `format:"LLLVAR" length:"999" validator:"ANS"`
-	DE48  *ANS        `format:"LLLVAR" length:"999" validator:"ANS"`
-	DE49  *N          `format:"" length:"3" validator:"N"`
-	DE50  *N          `format:"" length:"3" validator:"N"`
-	DE51  *N          `format:"" length:"3" validator:"N"`
-	DE52  *B64        `format:"" length:"64" validator:"B64"`
-	DE54  *ANS        `format:"LLLVAR" length:"120" validator:"ANS"`
-	DE56  *N          `format:"LLVAR" length:"35" validator:"N"`
-	DE57  *N          `format:"" length:"3" validator:"N"`
-	DE58  *N          `format:"LLVAR" length:"11" validator:"N"`
-	DE59  *ANS        `format:"LLLVAR" length:"999" validator:"ANS"`
-	DE62  *N          `format:"" length:"6" validator:"N"`
-	DE63  *N          `format:"" length:"4" validator:"MMDD"`
-	DE66  *ANS        `format:"LLLVAR" length:"204" validator:"ANS"`
-	DE72  *ANS        `format:"LLLVAR" length:"999" validator:"ANS"`
-	DE93  *N          `format:"LLVAR" length:"11" validator:"N"`
-	DE94  *N          `format:"LLVAR" length:"11" validator:"N"`
-	DE95  *ANS        `format:"LLLLVAR" length:"9999" validator:"ANS"`
-	DE96  *ANS        `format:"LLLVAR" length:"100" validator:"ANS"`
-	DE100 *N          `format:"LLVAR" length:"11" validator:"N"`
-	DE101 *ANS        `format:"LLVAR" length:"17" validator:"ANS"`
-	DE102 *ANS        `format:"LLVAR" length:"28" validator:"ANS"`
-	DE103 *ANS        `format:"LLVAR" length:"28" validator:"ANS"`
-	DE111 *ANS        `format:"LLLLVAR" length:"9999" validator:"ANS"`
-	DE123 *ANS        `format:"LLLVAR" length:"999" validator:"ANS"`
-	DE124 *ANS        `format:"LLLVAR" length:"999" validator:"ANS"`
-	DE125 *SubMessage `format:"LLLVAR" length:"999" validator:"ANS"`
-	DE126 *ANS        `format:"LLLVAR" length:"999" validator:"ANS"`
-	DE127 *ANS        `format:"LLLLVAR" length:"9999" validator:"ANS"`
-	DE128 *ANS        `format:"LLLLLVAR" length:"99999" validator:"ANS"`
+	DE1   uint64      `format:"" length:"64" json:",omitempty"` //secondary bitmap
+	DE2   *N          `format:"LLVAR" length:"19" validator:"N" json:",omitempty"`
+	DE3   *N          `format:"" length:"6" validator:"N" json:",omitempty"`
+	DE4   *N          `format:"" length:"12" validator:"N" json:",omitempty"`
+	DE5   *N          `format:"" length:"12" validator:"N" json:",omitempty"`
+	DE6   *N          `format:"" length:"12" validator:"N" json:",omitempty"`
+	DE7   *N          `format:"" length:"10" validator:"MMDDHHMMSS" json:",omitempty"`
+	DE9   *N          `format:"" length:"8" validator:"N" json:",omitempty"`
+	DE10  *N          `format:"" length:"8" validator:"N" json:",omitempty"`
+	DE11  *N          `format:"" length:"6" validator:"N" json:",omitempty"`
+	DE12  *N          `format:"" length:"12" validator:"YYMMDDHHMMSS" json:",omitempty"`
+	DE14  *N          `format:"" length:"4" validator:"YYMM" json:",omitempty"`
+	DE16  *N          `format:"" length:"4" validator:"MMDD" json:",omitempty"`
+	DE17  *N          `format:"" length:"4" validator:"MMDD" json:",omitempty"`
+	DE18  *N          `format:"" length:"4" validator:"N" json:",omitempty"`
+	DE19  *N          `format:"" length:"3" validator:"N" json:",omitempty"`
+	DE22  *AN         `format:"" length:"12" validator:"AN" json:",omitempty"`
+	DE23  *N          `format:"" length:"3" validator:"N" json:",omitempty"`
+	DE24  *N          `format:"" length:"3" validator:"N" json:",omitempty"`
+	DE25  *N          `format:"" length:"4" validator:"N" json:",omitempty"`
+	DE26  *N          `format:"" length:"4" validator:"N" json:",omitempty"`
+	DE28  *N          `format:"" length:"6" validator:"YYMMDD" json:",omitempty"`
+	DE30  *N          `format:"" length:"24" validator:"N" json:",omitempty"`
+	DE32  *N          `format:"LLVAR" length:"11" validator:"N" json:",omitempty"`
+	DE33  *N          `format:"LLVAR" length:"11" validator:"N" json:",omitempty"`
+	DE34  *N          `format:"LLVAR" length:"28" validator:"N" json:",omitempty"`
+	DE35  *Z          `format:"LLVAR" length:"37" validator:"Z" json:",omitempty"`
+	DE37  *ANP        `format:"" length:"12" validator:"ANP" json:",omitempty"`
+	DE38  *ANP        `format:"" length:"6" validator:"ANP" json:",omitempty"`
+	DE39  *N          `format:"" length:"3" validator:"N" json:",omitempty"`
+	DE41  *ANS        `format:"" length:"8" validator:"ANS" json:",omitempty"`
+	DE42  *ANS        `format:"" length:"15" validator:"ANS" json:",omitempty"`
+	DE43  *ANS        `format:"LLVAR" length:"99" validator:"ANS" json:",omitempty"`
+	DE46  *ANS        `format:"LLLVAR" length:"186" validator:"ANS" json:",omitempty"`
+	DE47  *ANS        `format:"LLLVAR" length:"999" validator:"ANS" json:",omitempty"`
+	DE48  *ANS        `format:"LLLVAR" length:"999" validator:"ANS" json:",omitempty"`
+	DE49  *N          `format:"" length:"3" validator:"N" json:",omitempty"`
+	DE50  *N          `format:"" length:"3" validator:"N" json:",omitempty"`
+	DE51  *N          `format:"" length:"3" validator:"N" json:",omitempty"`
+	DE52  *B64        `format:"" length:"64" validator:"B64" json:",omitempty"`
+	DE54  *ANS        `format:"LLLVAR" length:"120" validator:"ANS" json:",omitempty"`
+	DE56  *N          `format:"LLVAR" length:"35" validator:"N" json:",omitempty"`
+	DE57  *N          `format:"" length:"3" validator:"N" json:",omitempty"`
+	DE58  *N          `format:"LLVAR" length:"11" validator:"N" json:",omitempty"`
+	DE59  *ANS        `format:"LLLVAR" length:"999" validator:"ANS" json:",omitempty"`
+	DE62  *N          `format:"" length:"6" validator:"N" json:",omitempty"`
+	DE63  *N          `format:"" length:"4" validator:"MMDD" json:",omitempty"`
+	DE66  *ANS        `format:"LLLVAR" length:"204" validator:"ANS" json:",omitempty"`
+	DE72  *ANS        `format:"LLLVAR" length:"999" validator:"ANS" json:",omitempty"`
+	DE93  *N          `format:"LLVAR" length:"11" validator:"N" json:",omitempty"`
+	DE94  *N          `format:"LLVAR" length:"11" validator:"N" json:",omitempty"`
+	DE95  *ANS        `format:"LLLLVAR" length:"9999" validator:"ANS" json:",omitempty"`
+	DE96  *ANS        `format:"LLLVAR" length:"100" validator:"ANS" json:",omitempty"`
+	DE100 *N          `format:"LLVAR" length:"11" validator:"N" json:",omitempty"`
+	DE101 *ANS        `format:"LLVAR" length:"17" validator:"ANS" json:",omitempty"`
+	DE102 *ANS        `format:"LLVAR" length:"28" validator:"ANS" json:",omitempty"`
+	DE103 *ANS        `format:"LLVAR" length:"28" validator:"ANS" json:",omitempty"`
+	DE111 *ANS        `format:"LLLLVAR" length:"9999" validator:"ANS" json:",omitempty"`
+	DE123 *ANS        `format:"LLLVAR" length:"999" validator:"ANS" json:",omitempty"`
+	DE124 *ANS        `format:"LLLVAR" length:"999" validator:"ANS" json:",omitempty"`
+	DE125 *SubMessage `format:"LLLVAR" length:"999" validator:"ANS" json:",omitempty"`
+	DE126 *ANS        `format:"LLLVAR" length:"999" validator:"ANS" json:",omitempty"`
+	DE127 *ANS        `format:"LLLLVAR" length:"9999" validator:"ANS" json:",omitempty"`
+	DE128 *ANS        `format:"LLLLLVAR" length:"99999" validator:"ANS" json:",omitempty"`
 }
 
 func (m *Message) Encode() ([]byte, error) {
