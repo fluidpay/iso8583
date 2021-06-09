@@ -1,6 +1,7 @@
 package iso8583
 
 import (
+	"encoding/json"
 	"errors"
 	"reflect"
 	"strconv"
@@ -15,6 +16,8 @@ type Message struct {
 	encoder      int
 
 	bitmapPrimary uint64
+
+	SafeLog bool `json:"-"` // This determines whether or not to log DE2
 
 	DE1   uint64      `format:"" length:"64" json:",omitempty"` //secondary bitmap
 	DE2   *N          `format:"LLVAR" length:"19" validator:"N" json:",omitempty"`
@@ -80,6 +83,14 @@ type Message struct {
 	DE126 *ANS        `format:"LLLVAR" length:"999" validator:"ANS" json:",omitempty"`
 	DE127 *ANS        `format:"LLLLVAR" length:"9999" validator:"ANS" json:",omitempty"`
 	DE128 *ANS        `format:"LLLLLVAR" length:"99999" validator:"ANS" json:",omitempty"`
+}
+
+func New() *Message {
+	return &Message{}
+}
+
+func NewSafe() *Message {
+	return &Message{SafeLog: true}
 }
 
 func (m *Message) Encode() ([]byte, error) {
@@ -268,6 +279,19 @@ func (m *Message) Decode(bytes []byte) error {
 		it += nextFieldOffset
 	}
 	return nil
+}
+
+// String will take in the message struct and output to a string
+// if SafeLog is true clear out DE2 for safe logging
+func (m *Message) String() string {
+	out, _ := json.Marshal(m)
+	outStr := string(out)
+
+	if m.SafeLog {
+		return strings.Replace(outStr, m.DE2.String(), strings.Repeat("x", len(m.DE2.String())), -1)
+	}
+
+	return outStr
 }
 
 func (m *Message) PackedBitmap(packed bool) {

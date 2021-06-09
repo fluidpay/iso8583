@@ -3,6 +3,10 @@ package iso8583
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"math/rand"
+	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -144,7 +148,7 @@ func TestNDecode(t *testing.T) {
 
 func TestMarshalJSON(t *testing.T) {
 	m := Message{
-		DE2: NewNumeric("1234412"),
+		DE2:  NewNumeric("1234412"),
 		DE22: NewAlphanumeric("3123"),
 		DE35: NewTrack2Code("latrack2"),
 		DE37: NewANP("affa32"),
@@ -180,6 +184,25 @@ func TestUnmarshalJSON(t *testing.T) {
 	equals(t, string(m.DE125.SE85.Value), "123", "")
 
 	//equals(t, string(result), expected, "")
+}
+
+// TestToLog will make sure if anyone runs ToLog that it will not show DE2 (primary account number)
+func TestToLog(t *testing.T) {
+	// Test new message
+	m := New()
+	m.DE2 = NewNumeric(strconv.Itoa(rand.Intn((9999999999999999+1)-1111111111111111) + 1111111111111111))
+	newString := fmt.Sprint(m)
+	if !strings.Contains(newString, m.DE2.String()) {
+		t.Error("String should have contained the DE2 value but it didnt")
+	}
+
+	// Test new safe message
+	ms := NewSafe()
+	ms.DE2 = NewNumeric(strconv.Itoa(rand.Intn((9999999999999999+1)-1111111111111111) + 1111111111111111))
+	newSafeString := fmt.Sprint(ms)
+	if strings.Contains(newSafeString, ms.DE2.String()) {
+		t.Error("String should have NOT contained the DE2 value but it did")
+	}
 }
 
 func equals(t *testing.T, actual, expected, description string) {
